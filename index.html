@@ -1,13 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Graphs App</title>
-  </head>
-  <body>
-    <main></main>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graphs App</title>
+</head>
+
+<body>
+  <main>
+    <h1>Graphs Drawing and Application of Search Algorithms</h1>
+
+    <!-- TOOLS MENU -->
+    <menu>
+
+      <!-- GRAPHS -->
+      <section id="graphs">
+        <ul>
+          <li>
+            <button>New</button>
+          </li>
+          <li>
+            <button>Clean</button>
+          </li>
+        </ul>
+      </section>
+
+      <!-- DRAWING -->
+      <section id="drawing">
+        <ul>
+          <li>
+            <button>Node</button>
+          </li>
+          <li>
+            <button>Edge</button>
+          </li>
+          <li>
+            <button>Delete</button>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ALGORITHM EXECUTION -->
+      <section id="execution">
+        <ul>
+          <li>
+            <select name="algorithm" id="algorithm">
+              <option value="bfs">BFS</option>
+              <option value="dfs">DFS</option>
+            </select>
+          </li>
+          <li>
+            <button>Play</button>
+          </li>
+          <li>
+            <button>Pause</button>
+          </li>
+          <li>
+            <button>Stop</button>
+          </li>
+          <li>
+            <button>Clean</button>
+          </li>
+        </ul>
+      </section>
+    </menu>
+
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
