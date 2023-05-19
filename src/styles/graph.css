@@ -1,7 +1,9 @@
 :root {
 	--bg-primary: #303952;
+	--bg-opaque: #404c6b;
 	--bg-secondary: #3dc1d3;
 }
+
 
 /* NODE */
 .full-node text {
@@ -20,4 +22,19 @@
 	stroke-width: 3px;
 	fill: #fff;
 	cursor: grab;
+}
+
+
+/* EDGE */
+.full-edge {
+	text-anchor: middle;
+	dominant-baseline: text-after-edge;
+	fill: #2C3E50;
+	font-size: 14px;
+}
+
+.full-edge .edge {
+	stroke: var(--bg-secondary);
+	stroke-width: 3px;
+	fill: none;
 }
