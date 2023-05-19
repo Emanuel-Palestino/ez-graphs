@@ -20,7 +20,7 @@ body {
 /* TITLE */
 h1 {
 	width: 100%;
-	font-size: 24px;
+	font-size: 22px;
 	padding: 16px 12px;
 	background-color: var(--bg-primary);
 	color: #fff;
@@ -35,7 +35,7 @@ menu {
 	gap: 30px;
 	padding: 8px;
 	border-radius: 12px;
-	margin: 8px auto 0px;
+	margin: 8px auto;
 }
 
 menu section {
@@ -117,4 +117,18 @@ select:not(:disabled) {
 
 li select {
 	margin-top: 5px;
+}
+
+
+/* CANVAS */
+#canvas {
+	display: block;
+	width: 100%;
+	height: calc(100vh - 160px);
+	border: 1px solid #ddd;
+
+	--d: 2px;
+	background: radial-gradient(circle at var(--d) var(--d),
+			#ddd calc(var(--d) - 1px),
+			transparent var(--d)) 7px 7px / 24px 24px;
 }
