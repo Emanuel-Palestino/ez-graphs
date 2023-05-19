@@ -9,3 +9,112 @@
 body {
 	background-color: #f5f5f5;
 }
+
+:root {
+	--bg-primary: #303952;
+	--bg-opaque: #404c6b;
+	--bg-secondary: #3dc1d3;
+	--text-secondary: #ccc;
+}
+
+/* TITLE */
+h1 {
+	width: 100%;
+	font-size: 24px;
+	padding: 16px 12px;
+	background-color: var(--bg-primary);
+	color: #fff;
+}
+
+
+/* MENU */
+menu {
+	width: calc(100% - 16px);
+	background-color: var(--bg-primary);
+	display: flex;
+	gap: 30px;
+	padding: 8px;
+	border-radius: 12px;
+	margin: 8px auto 0px;
+}
+
+menu section {
+	position: relative;
+}
+
+menu section::after {
+	content: '';
+	display: block;
+	width: 2px;
+	height: 40px;
+	background-color: var(--bg-opaque);
+	border-radius: 6px;
+	position: absolute;
+	right: calc(-15px - 1px);
+	bottom: 0px;
+}
+
+menu section .section-title {
+	display: block;
+	color: var(--text-secondary);
+	font-size: 12px;
+	position: sticky;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	text-align: center;
+	margin-bottom: 2px;
+}
+
+menu section ul {
+	display: flex;
+	gap: 4px;
+}
+
+/* Menu Buttons */
+menu section ul li button {
+	width: 40px;
+	height: 40px;
+	cursor: pointer;
+	background-color: var(--bg-primary);
+	border: none;
+	color: #fff;
+	font-size: 24px;
+	border-radius: 6px;
+	transition: background-color 200ms, transform 200ms, color 200ms;
+}
+
+menu section ul li button:hover:not(:disabled) {
+	background-color: var(--bg-secondary);
+	color: var(--bg-primary);
+}
+
+menu section ul li button:active:not(:disabled) {
+	transform: scale(0.92);
+}
+
+menu section ul li button:disabled {
+	opacity: 0.5;
+	cursor: auto;
+}
+
+
+/* INPUT */
+input,
+select {
+	width: 160px;
+	height: 30px;
+	border-radius: 6px;
+	padding: 4px 6px;
+	font-size: 16px;
+	outline: none;
+	border: none;
+}
+
+select:not(:disabled) {
+	cursor: pointer;
+}
+
+li select {
+	margin-top: 5px;
+}

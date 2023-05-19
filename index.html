@@ -3,9 +3,15 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <!-- <link rel="icon" type="image/svg+xml" href="/vite.svg" /> -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Graphs App</title>
+
+  <!-- ICONS -->
+  <script src="https://kit.fontawesome.com/31bac16aff.js" crossorigin="anonymous"></script>
+
+  <!-- STYLES -->
+  <link rel="stylesheet" href="/src/styles/ui.css" />
 </head>
 
 <body>
@@ -15,53 +21,74 @@
     <!-- TOOLS MENU -->
     <menu>
 
-      <!-- GRAPHS -->
-      <section id="graphs">
+      <!-- GRAPH -->
+      <section id="graph">
+        <span class="section-title">Graph</span>
         <ul>
           <li>
-            <button>New</button>
+            <button id="btn-new_graph">
+              <i class="fa-solid fa-circle-plus"></i>
+            </button>
           </li>
           <li>
-            <button>Clean</button>
+            <button id="btn-clean_graph" disabled>
+              <i class="fa-solid fa-trash fa-sm"></i>
+            </button>
           </li>
         </ul>
       </section>
 
       <!-- DRAWING -->
       <section id="drawing">
+        <span class="section-title">Drawing</span>
         <ul>
           <li>
-            <button>Node</button>
+            <button id="btn-draw_node" disabled>
+              <i class="fa-regular fa-circle"></i>
+            </button>
           </li>
           <li>
-            <button>Edge</button>
+            <button id="btn-draw_edge" disabled>
+              <i class="fa-solid fa-slash fa-sm"></i>
+            </button>
           </li>
           <li>
-            <button>Delete</button>
+            <button id="btn-delete_element" disabled>
+              <i class="fa-regular fa-circle-xmark"></i>
+            </button>
           </li>
         </ul>
       </section>
 
       <!-- ALGORITHM EXECUTION -->
       <section id="execution">
+        <span class="section-title">Algorithm Execution</span>
         <ul>
           <li>
-            <select name="algorithm" id="algorithm">
+            <select id="algorithm" disabled>
               <option value="bfs">BFS</option>
               <option value="dfs">DFS</option>
             </select>
           </li>
           <li>
-            <button>Play</button>
+            <button id="btn-play_execute" disabled>
+              <i class="fa-solid fa-play"></i>
+            </button>
           </li>
           <li>
-            <button>Pause</button>
+            <button id="btn-pause_execute" disabled>
+              <i class="fa-solid fa-pause"></i>
+            </button>
           </li>
           <li>
-            <button>Stop</button>
+            <button id="btn-stop_execute" disabled>
+              <i class="fa-solid fa-stop"></i>
+            </button>
           </li>
           <li>
-            <button>Clean</button>
+            <button id="btn-clean_execute" disabled>
+              <i class="fa-solid fa-eraser"></i>
+            </button>
           </li>
         </ul>
       </section>
