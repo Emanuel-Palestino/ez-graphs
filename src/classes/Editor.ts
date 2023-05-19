@@ -1,15 +1,17 @@
 import { Edge } from './Edge'
 import { Node } from './Node'
+import { Nodes } from '../models/interfaces'
+
 
 export class Editor {
 	private canvas: SVGSVGElement
-	private nodes: Node[]
+	private nodes: Nodes
 	private edges: Edge[]
 
 	constructor(canvas: SVGSVGElement) {
 		this.canvas = canvas
 		this.canvas.setAttribute('viewBox', `0 0 ${this.canvas.clientWidth} ${this.canvas.clientHeight}`)
-		this.nodes = []
+		this.nodes = {}
 		this.edges = []
 
 		this.clickHandler = this.clickHandler.bind(this)
@@ -41,7 +43,7 @@ export class Editor {
 		// Create a new node
 		let node = new Node(x, y)
 		this.canvas.appendChild(node.node)
-		this.nodes.push(node)
+		this.nodes[node.id] = node
 	}
 
 	private mouseDownHandler(e: MouseEvent): void {
@@ -50,8 +52,8 @@ export class Editor {
 		if (target.classList.contains('node')) {
 			// Set the node as the one being dragged
 			let id = target.id
-			Node.nodeDragged = this.nodes.find(node => node.id === id) || null
-			Node.nodeDragged?.startMove()
+			Node.nodeDragged = this.nodes[id]
+			Node.nodeDragged.startMove()
 		}
 
 		this.canvas.addEventListener('mousemove', this.mouseMoveHandler)
@@ -59,7 +61,7 @@ export class Editor {
 
 	private mouseMoveHandler(e: MouseEvent): void {
 		if (!Node.nodeDragged) return
-		
+
 		e.preventDefault()
 		Node.nodeDragged.move(e.offsetX, e.offsetY)
 	}
