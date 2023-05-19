@@ -1,0 +1,23 @@
+:root {
+	--bg-primary: #303952;
+	--bg-secondary: #3dc1d3;
+}
+
+/* NODE */
+.full-node text {
+	text-anchor: middle;
+	alignment-baseline: after-edge;
+	fill: var(--bg-primary);
+	font-size: 18px;
+	pointer-events: none;
+	user-select: none;
+}
+
+.full-node .node {
+	position: relative;
+	r: 20px;
+	stroke: var(--bg-primary);
+	stroke-width: 3px;
+	fill: #fff;
+	cursor: grab;
+}
