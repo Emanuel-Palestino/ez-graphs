@@ -40,7 +40,13 @@ export class Edge {
 		this.weight = 0
 	}
 
-	public move(x: number, y: number): void {
+	public moveFrom(x: number, y: number): void {
+		if (!this.to) return
+
+		this.line.setAttribute('d', `M ${x},${y} L ${this.to.x},${this.to.y}`)
+	}
+
+	public moveTo(x: number, y: number): void {
 		this.line.setAttribute('d', `M ${this.from.x},${this.from.y} L ${x},${y}`)
 	}
 

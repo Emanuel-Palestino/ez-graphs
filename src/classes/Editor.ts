@@ -86,8 +86,18 @@ export class Editor {
 	private mouseMoveHandler(e: MouseEvent): void {
 		if (this.drawing === DrawingElement.Node && Node.nodeDragged) {
 			Node.nodeDragged.move(e.offsetX, e.offsetY)
+
+			// Move the edges connected to the node
+			const edges = Object.values(this.adyacencyList[Node.nodeDragged.id])
+			for (const edge of edges) {
+				if (edge.from === Node.nodeDragged)
+					edge.moveFrom(e.offsetX, e.offsetY)
+				else
+					edge.moveTo(e.offsetX, e.offsetY)
+			}
+
 		} else if (this.drawing === DrawingElement.Edge && Edge.edgeDragged) {
-			Edge.edgeDragged.move(e.offsetX, e.offsetY)
+			Edge.edgeDragged.moveTo(e.offsetX, e.offsetY)
 		}
 	}
 
