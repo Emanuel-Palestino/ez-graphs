@@ -1,12 +1,13 @@
 import { Edge } from './Edge'
 import { Node } from './Node'
-import { Nodes } from '../models/interfaces'
+import { AdyacencyList, Nodes } from '../models/interfaces'
 import { DrawingElement } from '../models/enums'
 
 
 export class Editor {
 	private canvas: SVGSVGElement
 	private nodes: Nodes
+	private adyacencyList: AdyacencyList
 
 	// Editor state
 	public drawing: DrawingElement
@@ -15,6 +16,7 @@ export class Editor {
 		this.canvas = canvas
 		this.canvas.setAttribute('viewBox', `0 0 ${this.canvas.clientWidth} ${this.canvas.clientHeight}`)
 		this.nodes = {}
+		this.adyacencyList = {}
 
 		this.clickHandler = this.clickHandler.bind(this)
 		this.mouseDownHandler = this.mouseDownHandler.bind(this)
@@ -50,6 +52,9 @@ export class Editor {
 
 			// Add the node to the nodes object
 			this.nodes[node.id] = node
+
+			// Add the node to the adyacency list
+			this.adyacencyList[node.id] = {}
 		}
 	}
 
@@ -79,8 +84,6 @@ export class Editor {
 	}
 
 	private mouseMoveHandler(e: MouseEvent): void {
-		e.preventDefault()
-
 		if (this.drawing === DrawingElement.Node && Node.nodeDragged) {
 			Node.nodeDragged.move(e.offsetX, e.offsetY)
 		} else if (this.drawing === DrawingElement.Edge && Edge.edgeDragged) {
@@ -95,12 +98,19 @@ export class Editor {
 		} else if (this.drawing === DrawingElement.Edge && Edge.edgeDragged) {
 			const target = e.target as SVGCircleElement
 
-			if (!target.classList.contains('node')) {
+			if (!target.classList.contains('node') || this.adyacencyList[Edge.edgeDragged.from.id][target.id]) {
 				// Remove the edge if it was not connected to a node
+				// or if it was connected to a node with the same edge
 				Edge.edgeDragged.edge.remove()
 			} else {
 				// Finish the edge drawing if it was connected to a node
 				Edge.edgeDragged.finishEdge(this.nodes[target.id])
+
+				// Add the edge to the adyacency list
+				if (!this.adyacencyList[Edge.edgeDragged.from.id][Edge.edgeDragged.to!.id]) {
+					this.adyacencyList[Edge.edgeDragged.from.id][Edge.edgeDragged.to!.id] = Edge.edgeDragged
+					this.adyacencyList[Edge.edgeDragged.to!.id][Edge.edgeDragged.from.id] = Edge.edgeDragged
+				}
 			}
 
 			Edge.edgeDragged = null
