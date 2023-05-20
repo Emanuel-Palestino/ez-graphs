@@ -98,6 +98,11 @@ menu section ul li button:disabled {
 	cursor: auto;
 }
 
+menu section ul li button.active {
+	background-color: var(--bg-secondary);
+	color: var(--bg-primary);
+}
+
 
 /* INPUT */
 input,

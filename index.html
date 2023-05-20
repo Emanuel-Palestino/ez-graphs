@@ -44,12 +44,12 @@
         <span class="section-title">Drawing</span>
         <ul>
           <li>
-            <button id="btn-draw_node" disabled>
+            <button id="btn-draw_node">
               <i class="fa-regular fa-circle"></i>
             </button>
           </li>
           <li>
-            <button id="btn-draw_edge" disabled>
+            <button id="btn-draw_edge">
               <i class="fa-solid fa-slash fa-sm"></i>
             </button>
           </li>
@@ -110,28 +110,14 @@
         </text>
       </g>
 
-      <g id="edges">
-        <g class="full-edge">
-          <path d="M 480,162 L 680,262" class="edge" id="edge_0" fromNode="node_1" toNode="node_2"></path>
-        </g>
-      </g>
+      <g id="edges"></g>
 
-      <g id="nodes">
-        <g class="full-node">
-          <circle class="node" id="node_1" cx="480" cy="162"></circle>
-          <text x="480" y="140" for-node="1" alignment-baseline="after-edge">1</text>
-        </g>
-
-        <g class="full-node">
-          <circle class="node" id="node_1" cx="680" cy="262"></circle>
-          <text x="680" y="240" for-node="node_2" alignment-baseline="after-edge">2</text>
-        </g>
-      </g>
+      <g id="nodes"></g>
     </svg>
 
   </main>
-  <script type="module" src="/src/main.ts"></script>
   <script type="module" src="/src/editor.ts"></script>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 
 </html>
