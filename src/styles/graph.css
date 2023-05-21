@@ -16,7 +16,6 @@
 
 .full-node .node {
 	position: relative;
-	r: 20px;
 	stroke: var(--bg-primary);
 	stroke-width: 3px;
 	fill: #fff;
@@ -31,9 +30,12 @@
 /* EDGE */
 .full-edge {
 	text-anchor: middle;
-	dominant-baseline: text-after-edge;
-	fill: #2C3E50;
+	fill: var(--bg-primary);
 	font-size: 14px;
+}
+
+.full-edge text {
+	user-select: none;
 }
 
 .full-edge .edge {

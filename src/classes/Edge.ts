@@ -4,12 +4,16 @@ export class Edge {
 	// SVG elements
 	public edge: SVGGElement
 	private line: SVGPathElement
+	private weightText: SVGTextElement
+	private weightTextPath: SVGTextPathElement
 
 	// Public edge properties
 	public from: Node
 	public to: Node | null
 	public id: number
 	public weight: number
+
+	private weighted: boolean = false
 
 	public static edgeCount: number = 0
 	public static edgeDragged: Edge | null = null
@@ -19,20 +23,26 @@ export class Edge {
 
 		// Create edge container
 		this.edge = document.createElementNS('http://www.w3.org/2000/svg', 'g')
-		this.edge.setAttribute('class', 'full-edge')
+		this.edge.setAttributeNS(null, 'class', 'full-edge')
 
 		// Create edge line
 		this.line = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-		this.line.setAttribute('class', 'edge')
-		this.line.setAttribute('id', `edge_${'x'}`)
-		this.line.setAttribute('from-node', from.id)
+		this.line.setAttributeNS(null, 'class', 'edge')
+		this.line.setAttributeNS(null, 'id', `edge_${Edge.edgeCount}`)
+		this.line.setAttributeNS(null, 'from-node', from.id)
 		// Add arrowhead to line if directed
 		if (directed) {
-			this.line.setAttribute('marker-end', 'url(#arrowhead)')
+			this.line.setAttributeNS(null, 'marker-end', 'url(#arrowhead)')
 		}
+
+		// Create edge weight text
+		this.weightText = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+		this.weightTextPath = document.createElementNS('http://www.w3.org/2000/svg', 'textPath')
+		this.weightText.appendChild(this.weightTextPath)
 
 		// Append elements to edge container
 		this.edge.appendChild(this.line)
+		this.edge.appendChild(this.weightText)
 
 		this.from = from
 		this.to = null
@@ -43,27 +53,44 @@ export class Edge {
 	public moveFrom(x: number, y: number): void {
 		if (!this.to) return
 
-		this.line.setAttribute('d', `M ${x},${y} L ${this.to.x},${this.to.y}`)
+		this.line.setAttributeNS(null, 'd', `M ${x},${y} L ${this.to.x},${this.to.y}`)
+
+		if (this.weighted) {
+			this.weightTextPath.textContent = this.to.x < x ? this.weight.toString().split('').reverse().join('') : String(this.weight)
+			this.weightText.setAttributeNS(null, 'rotate', `${this.to.x < x ? 180 : 0}`)
+		}
 	}
 
 	public moveTo(x: number, y: number): void {
-		this.line.setAttribute('d', `M ${this.from.x},${this.from.y} L ${x},${y}`)
+		this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} L ${x},${y}`)
+
+		if (this.weighted) {
+			this.weightTextPath.textContent = x < this.from.x ? this.weight.toString().split('').reverse().join('') : String(this.weight)
+			this.weightText.setAttributeNS(null, 'rotate', `${x < this.from.x ? 180 : 0}`)
+		}
 	}
 
 	public finishEdge(to: Node, weighted: boolean = false, weight: number = 0): void {
 		// Finish edge creation
+		this.weighted = weighted
 
 		this.to = to
-		this.line.setAttribute('to-node', this.to.id)
+		this.line.setAttributeNS(null, 'to-node', this.to.id)
 
 		if (this.from === this.to) {
-			this.line.setAttribute('d', `M ${this.from.x},${this.from.y} C ${(this.from.x - 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${(this.from.x + 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${this.from.x},${this.from.y} M ${this.from.x},${this.from.y}`)
+			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} C ${(this.from.x - 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${(this.from.x + 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${this.from.x},${this.from.y} M ${this.from.x},${this.from.y}`)
 		} else {
-			this.line.setAttribute('d', `M ${this.from.x},${this.from.y} L ${to.x},${to.y}`)
+			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} L ${to.x},${to.y}`)
 		}
 
-		if (weighted) {
+		if (this.weighted) {
 			this.weight = weight
+			this.weightTextPath.setAttributeNS(null, 'href', `#edge_${this.id}`)
+			this.weightTextPath.setAttributeNS(null, 'startOffset', '50%')
+			this.weightTextPath.setAttributeNS(null, 'alignment-baseline', 'text-after-edge')
+			this.weightTextPath.textContent = this.to.x < this.from.x ? this.weight.toString().split('').reverse().join('') : String(this.weight)
+
+			this.weightText.setAttributeNS(null, 'rotate', `${this.to.x < this.from.x ? 180 : 0}`)
 		}
 	}
 }

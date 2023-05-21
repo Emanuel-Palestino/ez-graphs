@@ -35,6 +35,7 @@ export class Node {
 		this.circle.setAttributeNS(null, 'id', `node_${name ? name : Node.nodeCount}`)
 		this.circle.setAttributeNS(null, 'cx', String(this.x))
 		this.circle.setAttributeNS(null, 'cy', String(this.y))
+		this.circle.setAttributeNS(null, 'r', '20')
 
 		// Create node name
 		this.name = document.createElementNS('http://www.w3.org/2000/svg', 'text')

@@ -137,3 +137,7 @@ li select {
 			#ddd calc(var(--d) - 1px),
 			transparent var(--d)) 7px 7px / 24px 24px;
 }
+
+#canvas.grabbing {
+	cursor: grabbing;
+}

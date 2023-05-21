@@ -77,6 +77,8 @@ export class Editor {
 
 				// Set the edge as the one being dragged
 				Edge.edgeDragged = edge
+
+				this.canvas.classList.add('grabbing')
 			}
 		}
 
@@ -114,7 +116,7 @@ export class Editor {
 				Edge.edgeDragged.edge.remove()
 			} else {
 				// Finish the edge drawing if it was connected to a node
-				Edge.edgeDragged.finishEdge(this.nodes[target.id])
+				Edge.edgeDragged.finishEdge(this.nodes[target.id], true, 1000)
 
 				// Add the edge to the adyacency list
 				if (!this.adyacencyList[Edge.edgeDragged.from.id][Edge.edgeDragged.to!.id]) {
@@ -124,6 +126,7 @@ export class Editor {
 			}
 
 			Edge.edgeDragged = null
+			this.canvas.classList.remove('grabbing')
 		}
 
 		this.canvas.removeEventListener('mousemove', this.mouseMoveHandler)
