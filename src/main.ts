@@ -1,5 +1,4 @@
 import { editor } from "./editor"
-import { DrawingElement } from "./models/enums"
 import { activateButton } from "./utils/menu"
 
 editor.init()
@@ -7,7 +6,7 @@ editor.init()
 // Draw node button
 const btnDrawNode = document.querySelector<HTMLButtonElement>('#btn-draw_node')
 btnDrawNode?.addEventListener('click', () => {
-	editor.drawing = DrawingElement.Node
+	editor.switchDrawingNode()
 
 	activateButton(btnDrawNode)
 })
@@ -15,7 +14,15 @@ btnDrawNode?.addEventListener('click', () => {
 // Draw edge button
 const btnDrawEdge = document.querySelector<HTMLButtonElement>('#btn-draw_edge')
 btnDrawEdge?.addEventListener('click', () => {
-	editor.drawing = DrawingElement.Edge
+	editor.switchDrawingEdge()
 
 	activateButton(btnDrawEdge)
+})
+
+// Delete element button
+const btnDeleteElement = document.querySelector<HTMLButtonElement>('#btn-delete_element')
+btnDeleteElement?.addEventListener('click', () => {
+	editor.switchDeletingElement()
+
+	activateButton(btnDeleteElement)
 })

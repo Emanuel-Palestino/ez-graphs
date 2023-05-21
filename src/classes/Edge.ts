@@ -10,7 +10,7 @@ export class Edge {
 	// Public edge properties
 	public from: Node
 	public to: Node | null
-	public id: number
+	public id: string
 	public weight: number
 
 	private weighted: boolean = false
@@ -20,6 +20,7 @@ export class Edge {
 
 	constructor(from: Node, directed: boolean = false) {
 		Edge.edgeCount++
+		this.id = `edge_${Edge.edgeCount}`
 
 		// Create edge container
 		this.edge = document.createElementNS('http://www.w3.org/2000/svg', 'g')
@@ -28,7 +29,7 @@ export class Edge {
 		// Create edge line
 		this.line = document.createElementNS('http://www.w3.org/2000/svg', 'path')
 		this.line.setAttributeNS(null, 'class', 'edge')
-		this.line.setAttributeNS(null, 'id', `edge_${Edge.edgeCount}`)
+		this.line.setAttributeNS(null, 'id', this.id)
 		this.line.setAttributeNS(null, 'from-node', from.id)
 		// Add arrowhead to line if directed
 		if (directed) {
@@ -46,7 +47,6 @@ export class Edge {
 
 		this.from = from
 		this.to = null
-		this.id = Edge.edgeCount
 		this.weight = 0
 	}
 
@@ -55,6 +55,7 @@ export class Edge {
 
 		this.line.setAttributeNS(null, 'd', `M ${x},${y} L ${this.to.x},${this.to.y}`)
 
+		// Update weight text orientation
 		if (this.weighted) {
 			this.weightTextPath.textContent = this.to.x < x ? this.weight.toString().split('').reverse().join('') : String(this.weight)
 			this.weightText.setAttributeNS(null, 'rotate', `${this.to.x < x ? 180 : 0}`)
@@ -64,6 +65,7 @@ export class Edge {
 	public moveTo(x: number, y: number): void {
 		this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} L ${x},${y}`)
 
+		// Update weight text orientation
 		if (this.weighted) {
 			this.weightTextPath.textContent = x < this.from.x ? this.weight.toString().split('').reverse().join('') : String(this.weight)
 			this.weightText.setAttributeNS(null, 'rotate', `${x < this.from.x ? 180 : 0}`)
@@ -85,12 +87,20 @@ export class Edge {
 
 		if (this.weighted) {
 			this.weight = weight
-			this.weightTextPath.setAttributeNS(null, 'href', `#edge_${this.id}`)
+			this.weightTextPath.setAttributeNS(null, 'href', `#${this.id}`)
 			this.weightTextPath.setAttributeNS(null, 'startOffset', '50%')
 			this.weightTextPath.setAttributeNS(null, 'alignment-baseline', 'text-after-edge')
 			this.weightTextPath.textContent = this.to.x < this.from.x ? this.weight.toString().split('').reverse().join('') : String(this.weight)
 
 			this.weightText.setAttributeNS(null, 'rotate', `${this.to.x < this.from.x ? 180 : 0}`)
 		}
+	}
+
+	public selecting(): void {
+		this.line.classList.add('selecting')
+	}
+
+	public unselecting(): void {
+		this.line.classList.remove('selecting')
 	}
 }

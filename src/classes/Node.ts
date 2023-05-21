@@ -59,7 +59,7 @@ export class Node {
 	}
 
 	public startMove(): void {
-		this.circle.classList.add('grabbed')
+		this.circle.classList.add('grabbing')
 	}
 
 	public move(x: number, y: number): void {
@@ -74,6 +74,27 @@ export class Node {
 	}
 
 	public endMove(): void {
-		this.circle.classList.remove('grabbed')
+		this.circle.classList.remove('grabbing')
+	}
+
+	public drawing(): void {
+		this.circle.classList.remove('selecting')
+		this.circle.classList.remove('deleting')
+
+		this.circle.classList.add('drawing')
+	}
+
+	public selecting(): void {
+		this.circle.classList.remove('drawing')
+		this.circle.classList.remove('deleting')
+
+		this.circle.classList.add('selecting')
+	}
+
+	public deleting(): void {
+		this.circle.classList.remove('drawing')
+		this.circle.classList.remove('selecting')
+
+		this.circle.classList.add('deleting')
 	}
 }

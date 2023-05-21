@@ -5,8 +5,10 @@ export interface Nodes {
 	[key: string]: Node
 }
 
+export interface Edges {
+	[key: string]: Edge
+}
+
 export interface AdyacencyList {
-	[key: string]: {
-		[key: string]: Edge
-	}
+	[key: string]: Edges
 }

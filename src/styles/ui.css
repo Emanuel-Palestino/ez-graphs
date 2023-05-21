@@ -138,6 +138,6 @@ li select {
 			transparent var(--d)) 7px 7px / 24px 24px;
 }
 
-#canvas.grabbing {
-	cursor: grabbing;
+#canvas.dragging-edge {
+	cursor: pointer;
 }

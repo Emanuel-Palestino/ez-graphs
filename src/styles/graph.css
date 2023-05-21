@@ -19,10 +19,21 @@
 	stroke: var(--bg-primary);
 	stroke-width: 3px;
 	fill: #fff;
+}
+
+.full-node .node.drawing {
 	cursor: grab;
 }
 
-.full-node .node.grabbed {
+.full-node .node.selecting {
+	cursor: pointer;
+}
+
+.full-node .node.deleting {
+	cursor: crosshair;
+}
+
+.full-node .node.grabbing {
 	cursor: grabbing;
 }
 
@@ -42,4 +53,8 @@
 	stroke: var(--bg-secondary);
 	stroke-width: 3px;
 	fill: none;
+}
+
+.full-edge .edge.selecting {
+	cursor: crosshair;
 }
