@@ -108,6 +108,24 @@
       <g id="nodes"></g>
     </svg>
 
+    <!-- MODALS -->
+    <dialog id="new_graph_modal">
+      <div class="header">
+        <h3>Test modal title</h3>
+      </div>
+      <div class="body">
+        <form id="new_graph_form">
+          <p>Test text 1</p>
+          <p>Test text Test text Test text Test text Test text</p>
+          <input type="text">
+        </form>
+        <div class="buttons">
+          <button form="new_graph_form" class="primary">Create</button>
+          <button id="btn-cancel_new_graph" class="secondary">Cancel</button>
+        </div>
+      </div>
+    </dialog>
+
   </main>
   <script type="module" src="/src/editor.ts"></script>
   <script type="module" src="/src/main.ts"></script>

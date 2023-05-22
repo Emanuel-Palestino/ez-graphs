@@ -78,6 +78,7 @@ menu section ul li button {
 	cursor: pointer;
 	background-color: var(--bg-primary);
 	border: none;
+	outline: none;
 	color: #fff;
 	font-size: 24px;
 	border-radius: 6px;
@@ -110,10 +111,10 @@ select {
 	width: 160px;
 	height: 30px;
 	border-radius: 6px;
-	padding: 4px 6px;
+	padding: 2px 6px;
 	font-size: 16px;
 	outline: none;
-	border: none;
+	border: 1px solid var(--bg-primary);
 }
 
 select:not(:disabled) {
@@ -140,4 +141,103 @@ li select {
 
 #canvas.dragging-edge {
 	cursor: pointer;
+}
+
+
+/* MODAL */
+dialog {
+	min-width: 250px;
+	min-height: 100px;
+	outline: none;
+	border: none;
+	transform: translate(-50%, -50%) scale(0.8);
+	left: 50%;
+	top: 50%;
+	opacity: 0;
+	background-color: transparent;
+}
+
+dialog::backdrop {
+	background-color: rgba(0, 0, 0, 0.5);
+	opacity: 0;
+}
+
+dialog[open] {
+	animation: dialog-appear 350ms forwards;
+}
+
+dialog[open]::backdrop {
+	animation: dialog-backdrop-appear 200ms forwards;
+}
+
+dialog .header {
+	background-color: #fff;
+	border-radius: 12px;
+	padding: 6px 12px;
+	margin-bottom: 8px;
+}
+
+dialog .header h3 {
+	text-align: center;
+	font-size: 20px;
+}
+
+dialog .body {
+	background-color: #fff;
+	border-radius: 12px;
+	padding: 12px;
+}
+
+dialog .body .buttons {
+	text-align: center;
+	margin-top: 8px;
+}
+
+dialog .body .buttons button {
+	border: none;
+	padding: 6px 16px;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: transform 200ms;
+	user-select: auto;
+	font-size: 14px;
+}
+
+dialog .body .buttons button.primary {
+	background-color: var(--bg-secondary);
+	color: var(--bg-primary);
+}
+
+dialog .body .buttons button.secondary {
+	background-color: var(--bg-primary);
+	color: #fff;
+}
+
+dialog .body .buttons button:active {
+	transform: scale(0.92);
+}
+
+@keyframes dialog-appear {
+	0% {
+		opacity: 0;
+	}
+
+	80% {
+		transform: translate(-50%, -50%) scale(1);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translate(-50%, -50%) scale(1);
+	}
+}
+
+@keyframes dialog-backdrop-appear {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
 }

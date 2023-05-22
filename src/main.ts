@@ -3,6 +3,15 @@ import { activateButton } from "./utils/menu"
 
 editor.init()
 
+// GRAPH BUTTONS
+const btnNewGraph = document.querySelector<HTMLButtonElement>('#btn-new_graph')
+btnNewGraph?.addEventListener('click', () => {
+	document.querySelector<HTMLDialogElement>('#new_graph_modal')?.showModal()
+})
+
+
+// DRAWING BUTTONS
+
 // Draw node button
 const btnDrawNode = document.querySelector<HTMLButtonElement>('#btn-draw_node')
 btnDrawNode?.addEventListener('click', () => {
