@@ -1,12 +1,22 @@
+import { Modal } from "./classes/Modal"
 import { editor } from "./editor"
 import { activateButton } from "./utils/menu"
 
 editor.init()
 
+// MODALS
+const newGraphModal = new Modal('new_graph_modal')
+
 // GRAPH BUTTONS
 const btnNewGraph = document.querySelector<HTMLButtonElement>('#btn-new_graph')
-btnNewGraph?.addEventListener('click', () => {
-	document.querySelector<HTMLDialogElement>('#new_graph_modal')?.showModal()
+btnNewGraph?.addEventListener('click', async () => {
+	const e = await newGraphModal.showAsync()
+	if (e) {
+		e.preventDefault()
+		console.log('aceptado')
+	} else {
+		console.log('cancelado')
+	}
 })
 
 
