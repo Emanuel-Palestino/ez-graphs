@@ -11,12 +11,23 @@ const newGraphModal = new Modal('new_graph_modal')
 const btnNewGraph = document.querySelector<HTMLButtonElement>('#btn-new_graph')
 btnNewGraph?.addEventListener('click', async () => {
 	const e = await newGraphModal.showAsync()
+	const form = document.querySelector<HTMLFormElement>('#new_graph_form')!
 	if (e) {
 		e.preventDefault()
-		console.log('aceptado')
-	} else {
-		console.log('cancelado')
+		const data = new FormData(form)
+		editor.createNewGraph(data.get('graph_type') === 'directed', !!data.get('weighted_graph'), !!data.get('autoname'))
+		btnDrawNode!.disabled = false
+		btnDrawEdge!.disabled = false
+		btnDeleteElement!.disabled = false
+		btnCleanGraph!.disabled = false
 	}
+	form.reset()
+	form.querySelector<HTMLInputElement>('#autoname')!.checked = true
+})
+
+const btnCleanGraph = document.querySelector<HTMLButtonElement>('#btn-clean_graph')
+btnCleanGraph?.addEventListener('click', () => {
+	console.log('clean graph')
 })
 
 

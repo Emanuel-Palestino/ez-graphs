@@ -13,6 +13,11 @@ export class Editor {
 	// Editor state
 	public drawing: DrawingElement
 
+	// Graph settings
+	private directed: boolean
+	private weighted: boolean
+	private autoname: boolean
+
 	constructor(canvas: SVGSVGElement) {
 		this.canvas = canvas
 		this.canvas.setAttribute('viewBox', `0 0 ${this.canvas.clientWidth} ${this.canvas.clientHeight}`)
@@ -26,6 +31,9 @@ export class Editor {
 		this.mouseUpHandler = this.mouseUpHandler.bind(this)
 
 		this.drawing = DrawingElement.None
+		this.directed = false
+		this.weighted = false
+		this.autoname = true
 	}
 
 	public init(): void {
@@ -181,5 +189,11 @@ export class Editor {
 
 		for (const edge of Object.values(this.edges))
 			edge.selecting()
+	}
+
+	public createNewGraph(directed: boolean, weighted: boolean, autoname: boolean): void {
+		this.directed = directed
+		this.weighted = weighted
+		this.autoname = autoname
 	}
 }

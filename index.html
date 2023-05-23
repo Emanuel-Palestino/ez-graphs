@@ -44,17 +44,17 @@
         <span class="section-title">Drawing</span>
         <ul>
           <li>
-            <button id="btn-draw_node">
+            <button id="btn-draw_node" disabled>
               <i class="fa-regular fa-circle"></i>
             </button>
           </li>
           <li>
-            <button id="btn-draw_edge">
+            <button id="btn-draw_edge" disabled>
               <i class="fa-solid fa-slash fa-sm"></i>
             </button>
           </li>
           <li>
-            <button id="btn-delete_element">
+            <button id="btn-delete_element" disabled>
               <i class="fa-regular fa-circle-xmark"></i>
             </button>
           </li>
@@ -111,17 +111,31 @@
     <!-- MODALS -->
     <dialog id="new_graph_modal">
       <div class="header">
-        <h3>Test modal title</h3>
+        <h3>Create New Graph</h3>
       </div>
       <div class="body">
         <form id="new_graph_form">
-          <p>Test text 1</p>
-          <p>Test text Test text Test text Test text Test text</p>
-          <input type="text">
+          <div class="form-input">
+            <label for="graph_type">Graph Type:</label>
+            <select id="graph_type" name="graph_type">
+              <option value="undirected">Undirected</option>
+              <option value="directed">Directed</option>
+            </select>
+          </div>
+
+          <div class="form-input">
+            <label for="weighted_graph">Weighted Graph:</label>
+            <input type="checkbox" name="weighted_graph" id="weighted_graph">
+          </div>
+
+          <div class="form-input">
+            <label for="autoname">Naming Nodes Automatically:</label>
+            <input type="checkbox" name="autoname" id="autoname" checked>
+          </div>
         </form>
         <div class="buttons">
-          <button form="new_graph_form" class="primary" modal-accept>Create</button>
           <button class="secondary" modal-cancel>Cancel</button>
+          <button form="new_graph_form" class="primary" modal-accept>Create</button>
         </div>
       </div>
     </dialog>

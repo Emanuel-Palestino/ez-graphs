@@ -117,12 +117,30 @@ select {
 	border: 1px solid var(--bg-primary);
 }
 
+input[type='checkbox'] {
+	width: 20px;
+	height: 20px;
+}
+
 select:not(:disabled) {
 	cursor: pointer;
 }
 
 li select {
 	margin-top: 5px;
+}
+
+/* FORM */
+.form-input {
+	margin-bottom: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 60px;
+}
+
+.form-input label {
+	flex-grow: 1;
 }
 
 
@@ -154,7 +172,8 @@ dialog {
 	left: 50%;
 	top: 50%;
 	opacity: 0;
-	background-color: transparent;
+	border-radius: 12px;
+	padding: 18px 30px;
 }
 
 dialog::backdrop {
@@ -171,10 +190,7 @@ dialog[open]::backdrop {
 }
 
 dialog .header {
-	background-color: #fff;
-	border-radius: 12px;
-	padding: 6px 12px;
-	margin-bottom: 8px;
+	margin-bottom: 24px;
 }
 
 dialog .header h3 {
@@ -183,24 +199,22 @@ dialog .header h3 {
 }
 
 dialog .body {
-	background-color: #fff;
 	border-radius: 12px;
-	padding: 12px;
 }
 
 dialog .body .buttons {
 	text-align: center;
-	margin-top: 8px;
+	margin-top: 12px;
 }
 
 dialog .body .buttons button {
 	border: none;
-	padding: 6px 16px;
+	padding: 8px 18px;
 	border-radius: 6px;
 	cursor: pointer;
 	transition: transform 200ms;
 	user-select: auto;
-	font-size: 14px;
+	font-size: 15px;
 }
 
 dialog .body .buttons button.primary {
