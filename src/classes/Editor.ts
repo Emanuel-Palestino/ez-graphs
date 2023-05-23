@@ -77,8 +77,8 @@ export class Editor {
 			const toNode = this.edges[edgeId].to
 
 			// Remove the edge from the adyacency list
-			delete this.adyacencyList[fromNode.id][toNode!.id]
-			delete this.adyacencyList[toNode!.id][fromNode.id]
+			delete this.adyacencyList[fromNode.id][toNode.id]
+			delete this.adyacencyList[toNode.id][fromNode.id]
 
 			// Remove the edge
 			this.edges[edgeId].edge.remove()
@@ -145,8 +145,8 @@ export class Editor {
 				this.edges[Edge.edgeDragged.id] = Edge.edgeDragged
 
 				// Add the edge to the adyacency list
-				this.adyacencyList[Edge.edgeDragged.from.id][Edge.edgeDragged.to!.id] = Edge.edgeDragged
-				this.adyacencyList[Edge.edgeDragged.to!.id][Edge.edgeDragged.from.id] = Edge.edgeDragged
+				this.adyacencyList[Edge.edgeDragged.from.id][Edge.edgeDragged.to.id] = Edge.edgeDragged
+				this.adyacencyList[Edge.edgeDragged.to.id][Edge.edgeDragged.from.id] = Edge.edgeDragged
 			}
 
 			Edge.edgeDragged = null
