@@ -14,6 +14,7 @@ export class Edge {
 	public weight: number
 
 	private weighted: boolean = false
+	private directed: boolean = false
 
 	public static edgeCount: number = 0
 	public static edgeDragged: Edge | null = null
@@ -21,6 +22,7 @@ export class Edge {
 	constructor(from: Node, directed: boolean = false) {
 		Edge.edgeCount++
 		this.id = `edge_${Edge.edgeCount}`
+		this.directed = directed
 
 		// Create edge container
 		this.edge = document.createElementNS('http://www.w3.org/2000/svg', 'g')
@@ -32,9 +34,8 @@ export class Edge {
 		this.line.setAttributeNS(null, 'id', this.id)
 		this.line.setAttributeNS(null, 'from-node', from.id)
 		// Add arrowhead to line if directed
-		if (directed) {
-			this.line.setAttributeNS(null, 'marker-end', 'url(#arrowhead)')
-		}
+		if (this.directed)
+			this.line.setAttributeNS(null, 'marker-end', 'url(#arrowhead_temp)')
 
 		// Create edge weight text
 		this.weightText = document.createElementNS('http://www.w3.org/2000/svg', 'text')
@@ -51,12 +52,16 @@ export class Edge {
 	}
 
 	public moveFrom(x: number, y: number): void {
-		this.line.setAttributeNS(null, 'd', `M ${x},${y} L ${this.to.x},${this.to.y}`)
+		if (this.from === this.to)
+			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} C ${(this.from.x - 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${(this.from.x + 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${this.from.x},${this.from.y} M ${this.from.x},${this.from.y}`)
+		else {
+			this.line.setAttributeNS(null, 'd', `M ${x},${y} L ${this.to.x},${this.to.y}`)
 
-		// Update weight text orientation
-		if (this.weighted) {
-			this.weightTextPath.textContent = this.to.x < x ? this.weight.toString().split('').reverse().join('') : String(this.weight)
-			this.weightText.setAttributeNS(null, 'rotate', `${this.to.x < x ? 180 : 0}`)
+			// Update weight text orientation
+			if (this.weighted) {
+				this.weightTextPath.textContent = this.to.x < x ? this.weight.toString().split('').reverse().join('') : String(this.weight)
+				this.weightText.setAttributeNS(null, 'rotate', `${this.to.x < x ? 180 : 0}`)
+			}
 		}
 	}
 
@@ -79,8 +84,14 @@ export class Edge {
 
 		if (this.from === this.to) {
 			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} C ${(this.from.x - 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${(this.from.x + 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${this.from.x},${this.from.y} M ${this.from.x},${this.from.y}`)
+
+			if (this.directed)
+				this.line.removeAttributeNS(null, 'marker-end')
 		} else {
 			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} L ${to.x},${to.y}`)
+
+			if (this.directed)
+				this.line.setAttributeNS(null, 'marker-end', 'url(#arrowhead)')
 		}
 
 		if (this.weighted) {

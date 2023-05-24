@@ -104,7 +104,7 @@ export class Editor {
 				Node.nodeDragged.startMove()
 			} else if (this.drawing === DrawingElement.Edge) {
 				// Create a new edge
-				const edge = new Edge(this.nodes[target.id])
+				const edge = new Edge(this.nodes[target.id], this.directed)
 
 				// Add the edge to the canvas
 				this.canvas.querySelector('#edges')?.appendChild(edge.edge)
@@ -123,7 +123,7 @@ export class Editor {
 		if (this.drawing === DrawingElement.Node && Node.nodeDragged) {
 			Node.nodeDragged.move(e.offsetX, e.offsetY)
 
-			// Move the edges connected to the node
+			// Move the edges connected to/from the node
 			for (const edge of Object.values(this.adyacencyList[Node.nodeDragged.id])) {
 				if (edge.from === Node.nodeDragged)
 					edge.moveFrom(e.offsetX, e.offsetY)
@@ -131,6 +131,12 @@ export class Editor {
 					edge.moveTo(e.offsetX, e.offsetY)
 			}
 
+			// Move the edges connected to the node if the graph is directed
+			if (this.directed) {
+				this.canvas.querySelectorAll<SVGPathElement>(`.edge[to-node="${Node.nodeDragged.id}"]`).forEach(edge => {
+					this.edges[edge.id].moveTo(e.offsetX, e.offsetY)
+				})
+			}
 		} else if (this.drawing === DrawingElement.Edge && Edge.edgeDragged)
 			Edge.edgeDragged.moveTo(e.offsetX, e.offsetY)
 	}
@@ -154,7 +160,8 @@ export class Editor {
 
 				// Add the edge to the adyacency list
 				this.adyacencyList[Edge.edgeDragged.from.id][Edge.edgeDragged.to.id] = Edge.edgeDragged
-				this.adyacencyList[Edge.edgeDragged.to.id][Edge.edgeDragged.from.id] = Edge.edgeDragged
+				if (!this.directed)
+					this.adyacencyList[Edge.edgeDragged.to.id][Edge.edgeDragged.from.id] = Edge.edgeDragged
 			}
 
 			Edge.edgeDragged = null
