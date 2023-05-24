@@ -2,6 +2,7 @@ import { Edge } from './Edge'
 import { Node } from './Node'
 import { AdyacencyList, Edges, Nodes } from '../models/interfaces'
 import { DrawingElement } from '../models/enums'
+import { Modal } from './Modal'
 
 
 export class Editor {
@@ -17,6 +18,9 @@ export class Editor {
 	private directed: boolean
 	private weighted: boolean
 	private autoname: boolean
+
+	// Modals
+	private nameNodeModal: Modal | null
 
 	constructor(canvas: SVGSVGElement) {
 		this.canvas = canvas
@@ -34,10 +38,13 @@ export class Editor {
 		this.directed = false
 		this.weighted = false
 		this.autoname = true
+
+		this.nameNodeModal = null
 	}
 
 	public init(): void {
 		this.setupEventListener()
+		this.nameNodeModal = new Modal('name_node_modal')
 	}
 
 	private setupEventListener(): void {
@@ -47,12 +54,28 @@ export class Editor {
 		this.canvas.addEventListener('mouseleave', this.mouseUpHandler)
 	}
 
-	private clickHandler(e: MouseEvent): void {
+	private async clickHandler(e: MouseEvent): Promise<void> {
 		const target = e.target as SVGElement
 
 		// Create a new node
 		if (target.id === 'canvas' && this.drawing === DrawingElement.Node) {
-			const node = new Node(e.offsetX, e.offsetY)
+
+			let nodeName = ''
+			if (!this.autoname) {
+				const eventName = await this.nameNodeModal!.showAsync()
+				const nameInput = this.nameNodeModal?.dialog.querySelector<HTMLInputElement>('input') as HTMLInputElement
+
+				if (eventName) {
+					eventName.preventDefault()
+					nodeName = nameInput.value
+					nameInput.value = ''
+				} else {
+					nameInput.value = ''
+					return
+				}
+			}
+
+			const node = new Node(e.offsetX, e.offsetY, this.autoname, nodeName)
 			node.drawing()
 
 			// Add the node to the canvas

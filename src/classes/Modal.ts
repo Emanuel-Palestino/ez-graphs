@@ -1,5 +1,5 @@
 export class Modal {
-	private dialog: HTMLDialogElement
+	public dialog: HTMLDialogElement
 	private cancelBtn: HTMLButtonElement
 	private acceptBtn: HTMLButtonElement
 

@@ -19,7 +19,7 @@ export class Node {
 	public static nodeCount: number = 0
 	public static nodeDragged: Node | null = null
 
-	constructor(x: number, y: number, name: string = '') {
+	constructor(x: number, y: number, autoname: boolean, name: string = '') {
 		Node.nodeCount++
 
 		this.x = x
@@ -32,7 +32,7 @@ export class Node {
 		// Create node circle
 		this.circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
 		this.circle.setAttributeNS(null, 'class', 'node')
-		this.circle.setAttributeNS(null, 'id', `node_${name ? name : Node.nodeCount}`)
+		this.circle.setAttributeNS(null, 'id', `node_${autoname ? Node.nodeCount : name}`)
 		this.circle.setAttributeNS(null, 'cx', String(this.x))
 		this.circle.setAttributeNS(null, 'cy', String(this.y))
 		this.circle.setAttributeNS(null, 'r', '20')
@@ -42,15 +42,15 @@ export class Node {
 		this.name.setAttributeNS(null, 'x', String(this.x))
 		this.name.setAttributeNS(null, 'y', String(this.y - 22))
 		this.name.setAttributeNS(null, 'alignment-baseline', 'after-edge')
-		this.name.setAttributeNS(null, 'for-node', name ? name : String(Node.nodeCount))
-		this.name.textContent = name ? name : String(Node.nodeCount)
+		this.name.setAttributeNS(null, 'for-node', autoname ? String(Node.nodeCount) : name)
+		this.name.textContent = autoname ? String(Node.nodeCount) : name
 
 		// Append elements to node container
 		this.node.appendChild(this.circle)
 		this.node.appendChild(this.name)
 
 		// Set node properties
-		this.id = `node_${name ? name : Node.nodeCount}`
+		this.id = `node_${autoname ? Node.nodeCount : name}`
 		this.state = 'unvisited'
 		this.distance = Infinity
 		this.finished = false

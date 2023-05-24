@@ -47,7 +47,7 @@ export class Edge {
 		this.edge.appendChild(this.weightText)
 
 		this.from = from
-		this.to = new Node(0, 0)
+		this.to = new Node(0, 0, false)
 		this.weight = 0
 	}
 
@@ -66,7 +66,10 @@ export class Edge {
 	}
 
 	public moveTo(x: number, y: number): void {
-		this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} L ${x},${y}`)
+		if (this.from === this.to)
+			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} C ${(this.from.x - 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${(this.from.x + 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${this.from.x},${this.from.y} M ${this.from.x},${this.from.y}`)
+		else
+			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} L ${x},${y}`)
 
 		// Update weight text orientation
 		if (this.weighted) {
