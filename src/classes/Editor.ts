@@ -95,15 +95,18 @@ export class Editor {
 			this.adyacencyList[node.id] = {}
 		} else if (target.classList.contains('node') && this.drawing === DrawingElement.Delete) {
 			const { id: nodeId } = target
-			// Remove the edges connected to the node
-			for (const edge of Object.values(this.adyacencyList[nodeId])) {
-				edge.edge.remove()
+			// Remove the edges connected to/from the node
+			this.canvas.querySelectorAll<SVGPathElement>(`.edge[from-node="${nodeId}"], .edge[to-node="${nodeId}"]`).forEach(edge => {
+				// Remove the edge from the adyacency list
+				delete this.adyacencyList[this.edges[edge.id].from.id][nodeId]
+				delete this.adyacencyList[this.edges[edge.id].to.id][nodeId]
+
+				// Remove the edge
+				this.edges[edge.id].edge.remove()
 				delete this.edges[edge.id]
-			}
+			})
 
 			// Remove the node from the adyacency list
-			for (const connection in this.adyacencyList[nodeId])
-				delete this.adyacencyList[connection][nodeId]
 			delete this.adyacencyList[nodeId]
 
 			// Remove the node
@@ -154,19 +157,12 @@ export class Editor {
 			Node.nodeDragged.move(e.offsetX, e.offsetY)
 
 			// Move the edges connected to/from the node
-			for (const edge of Object.values(this.adyacencyList[Node.nodeDragged.id])) {
-				if (edge.from === Node.nodeDragged)
-					edge.moveFrom(e.offsetX, e.offsetY)
+			this.canvas.querySelectorAll<SVGPathElement>(`.edge[from-node="${Node.nodeDragged.id}"], .edge[to-node="${Node.nodeDragged.id}"]`).forEach(edge => {
+				if (this.edges[edge.id].from === Node.nodeDragged)
+					this.edges[edge.id].moveFrom(e.offsetX, e.offsetY)
 				else
-					edge.moveTo(e.offsetX, e.offsetY)
-			}
-
-			// Move the edges connected to the node if the graph is directed
-			if (this.directed) {
-				this.canvas.querySelectorAll<SVGPathElement>(`.edge[to-node="${Node.nodeDragged.id}"]`).forEach(edge => {
 					this.edges[edge.id].moveTo(e.offsetX, e.offsetY)
-				})
-			}
+			})
 		} else if (this.drawing === DrawingElement.Edge && Edge.edgeDragged)
 			Edge.edgeDragged.moveTo(e.offsetX, e.offsetY)
 	}
