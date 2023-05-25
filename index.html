@@ -162,7 +162,25 @@
         </form>
         <div class="buttons">
           <button class="secondary" modal-cancel>Cancel</button>
-          <button form="name_node_form" class="primary" modal-accept>Add Node</button>
+          <button form="name_node_form" class="primary" modal-accept>Create Node</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="edge_weight_modal">
+      <div class="header">
+        <h3>Create an Edge</h3>
+      </div>
+      <div class="body">
+        <form id="edge_weight_form">
+          <div class="form-input">
+            <label for="edge_weight">Edge Weight:</label>
+            <input type="number" name="edge_weight" id="edge_weight">
+          </div>
+        </form>
+        <div class="buttons">
+          <button class="secondary" modal-cancel>Cancel</button>
+          <button form="edge_weight_form" class="primary" modal-accept>Create Edge</button>
         </div>
       </div>
     </dialog>

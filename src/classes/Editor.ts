@@ -13,6 +13,7 @@ export class Editor {
 
 	// Editor state
 	public drawing: DrawingElement
+	private modalOpen: boolean
 
 	// Graph settings
 	private directed: boolean
@@ -21,6 +22,7 @@ export class Editor {
 
 	// Modals
 	private nameNodeModal: Modal | null
+	private edgeWeightModal: Modal | null
 
 	constructor(canvas: SVGSVGElement) {
 		this.canvas = canvas
@@ -35,16 +37,19 @@ export class Editor {
 		this.mouseUpHandler = this.mouseUpHandler.bind(this)
 
 		this.drawing = DrawingElement.None
+		this.modalOpen = false
 		this.directed = false
 		this.weighted = false
 		this.autoname = true
 
 		this.nameNodeModal = null
+		this.edgeWeightModal = null
 	}
 
 	public init(): void {
 		this.setupEventListener()
 		this.nameNodeModal = new Modal('name_node_modal')
+		this.edgeWeightModal = new Modal('edge_weight_modal')
 	}
 
 	private setupEventListener(): void {
@@ -62,11 +67,13 @@ export class Editor {
 
 			let nodeName = ''
 			if (!this.autoname) {
-				const eventName = await this.nameNodeModal!.showAsync()
+				this.modalOpen = true
+				const nameEvent = await this.nameNodeModal!.showAsync()
+				this.modalOpen = false
 				const nameInput = this.nameNodeModal?.dialog.querySelector<HTMLInputElement>('input') as HTMLInputElement
 
-				if (eventName) {
-					eventName.preventDefault()
+				if (nameEvent) {
+					nameEvent.preventDefault()
 					nodeName = nameInput.value
 					nameInput.value = ''
 				} else {
@@ -164,7 +171,7 @@ export class Editor {
 			Edge.edgeDragged.moveTo(e.offsetX, e.offsetY)
 	}
 
-	private mouseUpHandler(e: MouseEvent): void {
+	private async mouseUpHandler(e: MouseEvent): Promise<void> {
 		if (this.drawing === DrawingElement.Node && Node.nodeDragged) {
 			Node.nodeDragged.endMove()
 			Node.nodeDragged = null
@@ -172,13 +179,38 @@ export class Editor {
 			const target = e.target as SVGCircleElement
 
 			if (!target.classList.contains('node') || this.adyacencyList[Edge.edgeDragged.from.id][target.id]) {
+				// Do nothing if modal is open
+				if (this.modalOpen) return
+
 				// Remove the edge if it was not connected to a node
 				// or if it was connected to a node with the same edge
 				Edge.edgeDragged.edge.remove()
 				Edge.edgeCount--
 			} else {
 				// Finish the edge drawing if it was connected to a node
-				Edge.edgeDragged.finishEdge(this.nodes[target.id], true, 1000)
+				let weight = 0
+
+				if (this.weighted) {
+					this.modalOpen = true
+					const weightEvent = await this.edgeWeightModal!.showAsync()
+					this.modalOpen = false
+					const weightInput = this.edgeWeightModal?.dialog.querySelector<HTMLInputElement>('input') as HTMLInputElement
+
+					if (weightEvent) {
+						weightEvent.preventDefault()
+						weight = Number(weightInput.value)
+						weightInput.value = ''
+					} else {
+						weightInput.value = ''
+						Edge.edgeDragged.edge.remove()
+						Edge.edgeDragged = null
+						Edge.edgeCount--
+						this.canvas.classList.remove('dragging-edge')
+						return
+					}
+				}
+
+				Edge.edgeDragged.finishEdge(this.nodes[target.id], this.weighted, weight)
 				this.edges[Edge.edgeDragged.id] = Edge.edgeDragged
 
 				// Add the edge to the adyacency list
