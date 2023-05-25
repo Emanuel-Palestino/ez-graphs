@@ -116,4 +116,10 @@ export class Edge {
 	public unselecting(): void {
 		this.line.classList.remove('selecting')
 	}
+
+	public undraw(): void {
+		this.edge.remove()
+		Edge.edgeCount--
+		Node.nodeCount--
+	}
 }

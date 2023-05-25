@@ -180,8 +180,7 @@ export class Editor {
 
 				// Remove the edge if it was not connected to a node
 				// or if it was connected to a node with the same edge
-				Edge.edgeDragged.edge.remove()
-				Edge.edgeCount--
+				Edge.edgeDragged.undraw()
 			} else {
 				// Finish the edge drawing if it was connected to a node
 				let weight = 0
@@ -198,9 +197,8 @@ export class Editor {
 						weightInput.value = ''
 					} else {
 						weightInput.value = ''
-						Edge.edgeDragged.edge.remove()
+						Edge.edgeDragged.undraw()
 						Edge.edgeDragged = null
-						Edge.edgeCount--
 						this.canvas.classList.remove('dragging-edge')
 						return
 					}
