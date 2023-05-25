@@ -83,6 +83,7 @@ export class Edge {
 		this.weighted = weighted
 
 		this.to = to
+		Node.nodeCount--
 		this.line.setAttributeNS(null, 'to-node', this.to.id)
 
 		if (this.from === this.to) {
