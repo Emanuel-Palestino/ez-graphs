@@ -119,7 +119,11 @@ export class Editor {
 
 			// Remove the edge from the adyacency list
 			delete this.adyacencyList[fromNode.id][toNode.id]
-			delete this.adyacencyList[toNode.id][fromNode.id]
+			if (this.directed && this.adyacencyList[toNode.id][fromNode.id]) {
+				this.adyacencyList[toNode.id][fromNode.id].updatePath(0, 0)
+				this.adyacencyList[toNode.id][fromNode.id].moveUp()
+			} else
+				delete this.adyacencyList[toNode.id][fromNode.id]
 
 			// Remove the edge
 			this.edges[edgeId].edge.remove()
@@ -158,10 +162,20 @@ export class Editor {
 
 			// Move the edges connected to/from the node
 			this.canvas.querySelectorAll<SVGPathElement>(`.edge[from-node="${Node.nodeDragged.id}"], .edge[to-node="${Node.nodeDragged.id}"]`).forEach(edge => {
-				if (this.edges[edge.id].from === Node.nodeDragged)
-					this.edges[edge.id].moveFrom(e.offsetX, e.offsetY)
-				else
-					this.edges[edge.id].moveTo(e.offsetX, e.offsetY)
+				const currentEdge = this.edges[edge.id]
+				if (currentEdge.from === Node.nodeDragged) {
+					if (this.adyacencyList[currentEdge.to.id][currentEdge.from.id]) {
+						const displacement = this.getDisplacement(currentEdge.from, currentEdge.to)
+						currentEdge.moveFrom(e.offsetX, e.offsetY, displacement.dx, displacement.dy)
+					} else
+						currentEdge.moveFrom(e.offsetX, e.offsetY)
+				} else {
+					if (this.adyacencyList[currentEdge.to.id][currentEdge.from.id]) {
+						const displacement = this.getDisplacement(currentEdge.from, currentEdge.to)
+						currentEdge.moveTo(e.offsetX, e.offsetY, displacement.dx, displacement.dy)
+					} else
+						currentEdge.moveTo(e.offsetX, e.offsetY)
+				}
 			})
 		} else if (this.drawing === DrawingElement.Edge && Edge.edgeDragged)
 			Edge.edgeDragged.moveTo(e.offsetX, e.offsetY)
@@ -204,7 +218,15 @@ export class Editor {
 					}
 				}
 
-				Edge.edgeDragged.finishEdge(this.nodes[target.id], this.weighted, weight)
+				if (this.directed && this.adyacencyList[target.id][Edge.edgeDragged.from.id]) {
+					const displacement = this.getDisplacement(Edge.edgeDragged.from, this.nodes[target.id])
+					Edge.edgeDragged.finishEdge(this.nodes[target.id], this.weighted, weight, displacement.dx, displacement.dy)
+					this.adyacencyList[target.id][Edge.edgeDragged.from.id].updatePath(-displacement.dx, -displacement.dy)
+					this.adyacencyList[target.id][Edge.edgeDragged.from.id].moveDown()
+				} else
+					Edge.edgeDragged.finishEdge(this.nodes[target.id], this.weighted, weight)
+
+				// Add the edge to the edges object
 				this.edges[Edge.edgeDragged.id] = Edge.edgeDragged
 
 				// Add the edge to the adyacency list
@@ -251,5 +273,17 @@ export class Editor {
 		this.directed = directed
 		this.weighted = weighted
 		this.autoname = autoname
+	}
+
+	private getDisplacement(from: Node, to: Node): { dx: number, dy: number } {
+		if (from.x === to.x)
+			return { dx: 5, dy: 0 }
+
+		const slope = (to.y - from.y) / (to.x - from.x)
+		const angle = Math.atan(slope)
+		return {
+			dx: 5 * Math.sin(angle),
+			dy: 5 * Math.cos(angle)
+		}
 	}
 }

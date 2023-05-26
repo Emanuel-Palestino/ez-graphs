@@ -15,6 +15,7 @@ export class Edge {
 
 	private weighted: boolean = false
 	private directed: boolean = false
+	private isDown: boolean = false
 
 	public static edgeCount: number = 0
 	public static edgeDragged: Edge | null = null
@@ -51,34 +52,39 @@ export class Edge {
 		this.weight = 0
 	}
 
-	public moveFrom(x: number, y: number): void {
+	public moveFrom(x: number, y: number, dx: number = 0, dy: number = 0): void {
 		if (this.from === this.to)
 			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} C ${(this.from.x - 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${(this.from.x + 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${this.from.x},${this.from.y} M ${this.from.x},${this.from.y}`)
 		else {
-			this.line.setAttributeNS(null, 'd', `M ${x},${y} L ${this.to.x},${this.to.y}`)
+			const cdx = (this.isDown ? -dx : dx)
+			const cdy = (this.isDown ? -dy : dy)
+			this.line.setAttributeNS(null, 'd', `M ${x + cdx},${y - cdy} L ${this.to.x + cdx},${this.to.y - cdy}`)
 
 			// Update weight text orientation
 			if (this.weighted) {
-				this.weightTextPath.textContent = this.to.x < x ? this.weight.toString().split('').reverse().join('') : String(this.weight)
-				this.weightText.setAttributeNS(null, 'rotate', `${this.to.x < x ? 180 : 0}`)
+				this.weightTextPath.textContent = this.to.x <= x ? this.weight.toString().split('').reverse().join('') : String(this.weight)
+				this.weightText.setAttributeNS(null, 'rotate', `${this.to.x <= x ? 180 : 0}`)
 			}
 		}
 	}
 
-	public moveTo(x: number, y: number): void {
+	public moveTo(x: number, y: number, dx: number = 0, dy: number = 0): void {
 		if (this.from === this.to)
 			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} C ${(this.from.x - 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${(this.from.x + 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${this.from.x},${this.from.y} M ${this.from.x},${this.from.y}`)
-		else
-			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} L ${x},${y}`)
+		else {
+			const cdx = (this.isDown ? -dx : dx)
+			const cdy = (this.isDown ? -dy : dy)
+			this.line.setAttributeNS(null, 'd', `M ${this.from.x + cdx},${this.from.y - cdy} L ${x + cdx},${y - cdy}`)
 
-		// Update weight text orientation
-		if (this.weighted) {
-			this.weightTextPath.textContent = x < this.from.x ? this.weight.toString().split('').reverse().join('') : String(this.weight)
-			this.weightText.setAttributeNS(null, 'rotate', `${x < this.from.x ? 180 : 0}`)
+			// Update weight text orientation
+			if (this.weighted) {
+				this.weightTextPath.textContent = x < this.from.x ? this.weight.toString().split('').reverse().join('') : String(this.weight)
+				this.weightText.setAttributeNS(null, 'rotate', `${x < this.from.x ? 180 : 0}`)
+			}
 		}
 	}
 
-	public finishEdge(to: Node, weighted: boolean = false, weight: number = 0): void {
+	public finishEdge(to: Node, weighted: boolean, weight: number, dx: number = 0, dy: number = 0): void {
 		// Finish edge creation
 		this.weighted = weighted
 
@@ -92,7 +98,7 @@ export class Edge {
 			if (this.directed)
 				this.line.removeAttributeNS(null, 'marker-end')
 		} else {
-			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} L ${to.x},${to.y}`)
+			this.line.setAttributeNS(null, 'd', `M ${this.from.x + dx},${this.from.y - dy} L ${this.to.x + dx},${this.to.y - dy}`)
 
 			if (this.directed)
 				this.line.setAttributeNS(null, 'marker-end', 'url(#arrowhead)')
@@ -121,5 +127,21 @@ export class Edge {
 		this.edge.remove()
 		Edge.edgeCount--
 		Node.nodeCount--
+	}
+
+	public updatePath(dx: number, dy: number): void {
+		this.line.setAttributeNS(null, 'd', `M ${this.from.x + dx},${this.from.y - dy} L ${this.to.x + dx},${this.to.y - dy}`)
+	}
+
+	public moveDown(): void {
+		this.isDown = true
+		if (this.weighted)
+			this.weightTextPath.setAttributeNS(null, 'alignment-baseline', 'text-before-edge')
+	}
+
+	public moveUp(): void {
+		this.isDown = false
+		if (this.weighted)
+			this.weightTextPath.setAttributeNS(null, 'alignment-baseline', 'text-after-edge')
 	}
 }
