@@ -119,10 +119,9 @@ export class Editor {
 
 			// Remove the edge from the adyacency list
 			delete this.adyacencyList[fromNode.id][toNode.id]
-			if (this.directed && this.adyacencyList[toNode.id][fromNode.id]) {
-				this.adyacencyList[toNode.id][fromNode.id].updatePath(0, 0)
+			if (this.directed && this.adyacencyList[toNode.id][fromNode.id])
 				this.adyacencyList[toNode.id][fromNode.id].moveUp()
-			} else
+			else
 				delete this.adyacencyList[toNode.id][fromNode.id]
 
 			// Remove the edge
@@ -165,13 +164,13 @@ export class Editor {
 				const currentEdge = this.edges[edge.id]
 				if (currentEdge.from === Node.nodeDragged) {
 					if (this.adyacencyList[currentEdge.to.id][currentEdge.from.id]) {
-						const displacement = this.getDisplacement(currentEdge.from, currentEdge.to)
+						const displacement = this.getDisplacement(currentEdge.from, currentEdge.to, currentEdge.from.y < currentEdge.to.y)
 						currentEdge.moveFrom(e.offsetX, e.offsetY, displacement.dx, displacement.dy)
 					} else
 						currentEdge.moveFrom(e.offsetX, e.offsetY)
 				} else {
 					if (this.adyacencyList[currentEdge.to.id][currentEdge.from.id]) {
-						const displacement = this.getDisplacement(currentEdge.from, currentEdge.to)
+						const displacement = this.getDisplacement(currentEdge.from, currentEdge.to, currentEdge.to.y < currentEdge.from.y)
 						currentEdge.moveTo(e.offsetX, e.offsetY, displacement.dx, displacement.dy)
 					} else
 						currentEdge.moveTo(e.offsetX, e.offsetY)
@@ -219,10 +218,9 @@ export class Editor {
 				}
 
 				if (this.directed && this.adyacencyList[target.id][Edge.edgeDragged.from.id]) {
-					const displacement = this.getDisplacement(Edge.edgeDragged.from, this.nodes[target.id])
+					const displacement = this.getDisplacement(Edge.edgeDragged.from, this.nodes[target.id], Edge.edgeDragged.from.y < this.nodes[target.id].y)
 					Edge.edgeDragged.finishEdge(this.nodes[target.id], this.weighted, weight, displacement.dx, displacement.dy)
-					this.adyacencyList[target.id][Edge.edgeDragged.from.id].updatePath(-displacement.dx, -displacement.dy)
-					this.adyacencyList[target.id][Edge.edgeDragged.from.id].moveDown()
+					this.adyacencyList[target.id][Edge.edgeDragged.from.id].moveDown(-displacement.dx, -displacement.dy)
 				} else
 					Edge.edgeDragged.finishEdge(this.nodes[target.id], this.weighted, weight)
 
@@ -275,9 +273,9 @@ export class Editor {
 		this.autoname = autoname
 	}
 
-	private getDisplacement(from: Node, to: Node): { dx: number, dy: number } {
+	private getDisplacement(from: Node, to: Node, up: boolean): { dx: number, dy: number } {
 		if (from.x === to.x)
-			return { dx: 5, dy: 0 }
+			return { dx: -5 * (up ? 1 : -1), dy: 0 }
 
 		const slope = (to.y - from.y) / (to.x - from.x)
 		const angle = Math.atan(slope)

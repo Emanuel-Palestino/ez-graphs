@@ -56,8 +56,8 @@ export class Edge {
 		if (this.from === this.to)
 			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} C ${(this.from.x - 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${(this.from.x + 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${this.from.x},${this.from.y} M ${this.from.x},${this.from.y}`)
 		else {
-			const cdx = (this.isDown ? -dx : dx)
-			const cdy = (this.isDown ? -dy : dy)
+			const cdx = this.isDown ? -dx : dx
+			const cdy = this.isDown ? -dy : dy
 			this.line.setAttributeNS(null, 'd', `M ${x + cdx},${y - cdy} L ${this.to.x + cdx},${this.to.y - cdy}`)
 
 			// Update weight text orientation
@@ -72,8 +72,8 @@ export class Edge {
 		if (this.from === this.to)
 			this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} C ${(this.from.x - 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${(this.from.x + 70).toFixed(3)},${(this.from.y - 75).toFixed(3)} ${this.from.x},${this.from.y} M ${this.from.x},${this.from.y}`)
 		else {
-			const cdx = (this.isDown ? -dx : dx)
-			const cdy = (this.isDown ? -dy : dy)
+			const cdx = this.isDown ? -dx : dx
+			const cdy = this.isDown ? -dy : dy
 			this.line.setAttributeNS(null, 'd', `M ${this.from.x + cdx},${this.from.y - cdy} L ${x + cdx},${y - cdy}`)
 
 			// Update weight text orientation
@@ -129,19 +129,19 @@ export class Edge {
 		Node.nodeCount--
 	}
 
-	public updatePath(dx: number, dy: number): void {
-		this.line.setAttributeNS(null, 'd', `M ${this.from.x + dx},${this.from.y - dy} L ${this.to.x + dx},${this.to.y - dy}`)
-	}
-
-	public moveDown(): void {
+	public moveDown(dx: number, dy: number): void {
 		this.isDown = true
 		if (this.weighted)
 			this.weightTextPath.setAttributeNS(null, 'alignment-baseline', 'text-before-edge')
+
+		this.line.setAttributeNS(null, 'd', `M ${this.from.x + dx},${this.from.y - dy} L ${this.to.x + dx},${this.to.y - dy}`)
 	}
 
 	public moveUp(): void {
 		this.isDown = false
 		if (this.weighted)
 			this.weightTextPath.setAttributeNS(null, 'alignment-baseline', 'text-after-edge')
+
+		this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} L ${this.to.x},${this.to.y}`)
 	}
 }
