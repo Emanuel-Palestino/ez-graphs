@@ -46,6 +46,10 @@ export class Editor {
 		this.edgeWeightModal = null
 	}
 
+	public getAdyacencyList(): AdyacencyList {
+		return this.adyacencyList
+	}
+
 	public init(): void {
 		this.setupEventListener()
 		this.nameNodeModal = new Modal('name_node_modal')
