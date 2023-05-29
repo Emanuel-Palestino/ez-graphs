@@ -4,3 +4,8 @@ export enum DrawingElement {
 	Edge,
 	Delete
 }
+
+export enum statesNodes {
+	Visited,
+	Unvisited
+}
