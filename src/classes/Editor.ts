@@ -2,6 +2,7 @@ import { Edge } from './Edge'
 import { Node } from './Node'
 import { AdyacencyList, Edges, Nodes } from '../models/interfaces'
 import { DrawingElement } from '../models/enums'
+import { Modal } from './Modal'
 
 
 export class Editor {
@@ -12,6 +13,16 @@ export class Editor {
 
 	// Editor state
 	public drawing: DrawingElement
+	private modalOpen: boolean
+
+	// Graph settings
+	private directed: boolean
+	private weighted: boolean
+	private autoname: boolean
+
+	// Modals
+	private nameNodeModal: Modal | null
+	private edgeWeightModal: Modal | null
 
 	constructor(canvas: SVGSVGElement) {
 		this.canvas = canvas
@@ -26,10 +37,23 @@ export class Editor {
 		this.mouseUpHandler = this.mouseUpHandler.bind(this)
 
 		this.drawing = DrawingElement.None
+		this.modalOpen = false
+		this.directed = false
+		this.weighted = false
+		this.autoname = true
+
+		this.nameNodeModal = null
+		this.edgeWeightModal = null
+	}
+
+	public getAdyacencyList(): AdyacencyList {
+		return this.adyacencyList
 	}
 
 	public init(): void {
 		this.setupEventListener()
+		this.nameNodeModal = new Modal('name_node_modal')
+		this.edgeWeightModal = new Modal('edge_weight_modal')
 	}
 
 	private setupEventListener(): void {
@@ -39,12 +63,30 @@ export class Editor {
 		this.canvas.addEventListener('mouseleave', this.mouseUpHandler)
 	}
 
-	private clickHandler(e: MouseEvent): void {
+	private async clickHandler(e: MouseEvent): Promise<void> {
 		const target = e.target as SVGElement
 
 		// Create a new node
 		if (target.id === 'canvas' && this.drawing === DrawingElement.Node) {
-			const node = new Node(e.offsetX, e.offsetY)
+
+			let nodeName = ''
+			if (!this.autoname) {
+				this.modalOpen = true
+				const nameEvent = await this.nameNodeModal!.showAsync()
+				this.modalOpen = false
+				const nameInput = this.nameNodeModal?.dialog.querySelector<HTMLInputElement>('input') as HTMLInputElement
+
+				if (nameEvent) {
+					nameEvent.preventDefault()
+					nodeName = nameInput.value
+					nameInput.value = ''
+				} else {
+					nameInput.value = ''
+					return
+				}
+			}
+
+			const node = new Node(e.offsetX, e.offsetY, this.autoname, nodeName)
 			node.drawing()
 
 			// Add the node to the canvas
@@ -57,15 +99,18 @@ export class Editor {
 			this.adyacencyList[node.id] = {}
 		} else if (target.classList.contains('node') && this.drawing === DrawingElement.Delete) {
 			const { id: nodeId } = target
-			// Remove the edges connected to the node
-			for (const edge of Object.values(this.adyacencyList[nodeId])) {
-				edge.edge.remove()
+			// Remove the edges connected to/from the node
+			this.canvas.querySelectorAll<SVGPathElement>(`.edge[from-node="${nodeId}"], .edge[to-node="${nodeId}"]`).forEach(edge => {
+				// Remove the edge from the adyacency list
+				delete this.adyacencyList[this.edges[edge.id].from.id][nodeId]
+				delete this.adyacencyList[this.edges[edge.id].to.id][nodeId]
+
+				// Remove the edge
+				this.edges[edge.id].edge.remove()
 				delete this.edges[edge.id]
-			}
+			})
 
 			// Remove the node from the adyacency list
-			for (const connection in this.adyacencyList[nodeId])
-				delete this.adyacencyList[connection][nodeId]
 			delete this.adyacencyList[nodeId]
 
 			// Remove the node
@@ -78,7 +123,10 @@ export class Editor {
 
 			// Remove the edge from the adyacency list
 			delete this.adyacencyList[fromNode.id][toNode.id]
-			delete this.adyacencyList[toNode.id][fromNode.id]
+			if (this.directed && this.adyacencyList[toNode.id][fromNode.id])
+				this.adyacencyList[toNode.id][fromNode.id].moveUp()
+			else
+				delete this.adyacencyList[toNode.id][fromNode.id]
 
 			// Remove the edge
 			this.edges[edgeId].edge.remove()
@@ -96,7 +144,7 @@ export class Editor {
 				Node.nodeDragged.startMove()
 			} else if (this.drawing === DrawingElement.Edge) {
 				// Create a new edge
-				const edge = new Edge(this.nodes[target.id])
+				const edge = new Edge(this.nodes[target.id], this.directed)
 
 				// Add the edge to the canvas
 				this.canvas.querySelector('#edges')?.appendChild(edge.edge)
@@ -115,19 +163,28 @@ export class Editor {
 		if (this.drawing === DrawingElement.Node && Node.nodeDragged) {
 			Node.nodeDragged.move(e.offsetX, e.offsetY)
 
-			// Move the edges connected to the node
-			for (const edge of Object.values(this.adyacencyList[Node.nodeDragged.id])) {
-				if (edge.from === Node.nodeDragged)
-					edge.moveFrom(e.offsetX, e.offsetY)
-				else
-					edge.moveTo(e.offsetX, e.offsetY)
-			}
-
+			// Move the edges connected to/from the node
+			this.canvas.querySelectorAll<SVGPathElement>(`.edge[from-node="${Node.nodeDragged.id}"], .edge[to-node="${Node.nodeDragged.id}"]`).forEach(edge => {
+				const currentEdge = this.edges[edge.id]
+				if (currentEdge.from === Node.nodeDragged) {
+					if (this.adyacencyList[currentEdge.to.id][currentEdge.from.id]) {
+						const displacement = this.getDisplacement(currentEdge.from, currentEdge.to, currentEdge.from.y < currentEdge.to.y)
+						currentEdge.moveFrom(e.offsetX, e.offsetY, displacement.dx, displacement.dy)
+					} else
+						currentEdge.moveFrom(e.offsetX, e.offsetY)
+				} else {
+					if (this.adyacencyList[currentEdge.to.id][currentEdge.from.id]) {
+						const displacement = this.getDisplacement(currentEdge.from, currentEdge.to, currentEdge.to.y < currentEdge.from.y)
+						currentEdge.moveTo(e.offsetX, e.offsetY, displacement.dx, displacement.dy)
+					} else
+						currentEdge.moveTo(e.offsetX, e.offsetY)
+				}
+			})
 		} else if (this.drawing === DrawingElement.Edge && Edge.edgeDragged)
 			Edge.edgeDragged.moveTo(e.offsetX, e.offsetY)
 	}
 
-	private mouseUpHandler(e: MouseEvent): void {
+	private async mouseUpHandler(e: MouseEvent): Promise<void> {
 		if (this.drawing === DrawingElement.Node && Node.nodeDragged) {
 			Node.nodeDragged.endMove()
 			Node.nodeDragged = null
@@ -135,18 +192,49 @@ export class Editor {
 			const target = e.target as SVGCircleElement
 
 			if (!target.classList.contains('node') || this.adyacencyList[Edge.edgeDragged.from.id][target.id]) {
+				// Do nothing if modal is open
+				if (this.modalOpen) return
+
 				// Remove the edge if it was not connected to a node
 				// or if it was connected to a node with the same edge
-				Edge.edgeDragged.edge.remove()
-				Edge.edgeCount--
+				Edge.edgeDragged.undraw()
 			} else {
 				// Finish the edge drawing if it was connected to a node
-				Edge.edgeDragged.finishEdge(this.nodes[target.id], true, 1000)
+				let weight = 0
+
+				if (this.weighted) {
+					this.modalOpen = true
+					const weightEvent = await this.edgeWeightModal!.showAsync()
+					this.modalOpen = false
+					const weightInput = this.edgeWeightModal?.dialog.querySelector<HTMLInputElement>('input') as HTMLInputElement
+
+					if (weightEvent) {
+						weightEvent.preventDefault()
+						weight = Number(weightInput.value)
+						weightInput.value = ''
+					} else {
+						weightInput.value = ''
+						Edge.edgeDragged.undraw()
+						Edge.edgeDragged = null
+						this.canvas.classList.remove('dragging-edge')
+						return
+					}
+				}
+
+				if (this.directed && this.adyacencyList[target.id][Edge.edgeDragged.from.id]) {
+					const displacement = this.getDisplacement(Edge.edgeDragged.from, this.nodes[target.id], Edge.edgeDragged.from.y < this.nodes[target.id].y)
+					Edge.edgeDragged.finishEdge(this.nodes[target.id], this.weighted, weight, displacement.dx, displacement.dy)
+					this.adyacencyList[target.id][Edge.edgeDragged.from.id].moveDown(-displacement.dx, -displacement.dy)
+				} else
+					Edge.edgeDragged.finishEdge(this.nodes[target.id], this.weighted, weight)
+
+				// Add the edge to the edges object
 				this.edges[Edge.edgeDragged.id] = Edge.edgeDragged
 
 				// Add the edge to the adyacency list
 				this.adyacencyList[Edge.edgeDragged.from.id][Edge.edgeDragged.to.id] = Edge.edgeDragged
-				this.adyacencyList[Edge.edgeDragged.to.id][Edge.edgeDragged.from.id] = Edge.edgeDragged
+				if (!this.directed)
+					this.adyacencyList[Edge.edgeDragged.to.id][Edge.edgeDragged.from.id] = Edge.edgeDragged
 			}
 
 			Edge.edgeDragged = null
@@ -181,5 +269,23 @@ export class Editor {
 
 		for (const edge of Object.values(this.edges))
 			edge.selecting()
+	}
+
+	public createNewGraph(directed: boolean, weighted: boolean, autoname: boolean): void {
+		this.directed = directed
+		this.weighted = weighted
+		this.autoname = autoname
+	}
+
+	private getDisplacement(from: Node, to: Node, up: boolean): { dx: number, dy: number } {
+		if (from.x === to.x)
+			return { dx: -5 * (up ? 1 : -1), dy: 0 }
+
+		const slope = (to.y - from.y) / (to.x - from.x)
+		const angle = Math.atan(slope)
+		return {
+			dx: 5 * Math.sin(angle),
+			dy: 5 * Math.cos(angle)
+		}
 	}
 }

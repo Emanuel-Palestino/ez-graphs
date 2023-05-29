@@ -44,17 +44,17 @@
         <span class="section-title">Drawing</span>
         <ul>
           <li>
-            <button id="btn-draw_node">
+            <button id="btn-draw_node" disabled>
               <i class="fa-regular fa-circle"></i>
             </button>
           </li>
           <li>
-            <button id="btn-draw_edge">
+            <button id="btn-draw_edge" disabled>
               <i class="fa-solid fa-slash fa-sm"></i>
             </button>
           </li>
           <li>
-            <button id="btn-delete_element">
+            <button id="btn-delete_element" disabled>
               <i class="fa-regular fa-circle-xmark"></i>
             </button>
           </li>
@@ -66,28 +66,28 @@
         <span class="section-title">Algorithm Execution</span>
         <ul>
           <li>
-            <select id="algorithm" disabled>
+            <select id="algorithm_execution" disabled>
               <option value="bfs">BFS</option>
               <option value="dfs">DFS</option>
             </select>
           </li>
           <li>
-            <button id="btn-play_execute" disabled>
+            <button id="btn-play_execution" disabled>
               <i class="fa-solid fa-play"></i>
             </button>
           </li>
           <li>
-            <button id="btn-pause_execute" disabled>
+            <button id="btn-pause_execution" disabled>
               <i class="fa-solid fa-pause"></i>
             </button>
           </li>
           <li>
-            <button id="btn-stop_execute" disabled>
+            <button id="btn-stop_execution" disabled>
               <i class="fa-solid fa-stop"></i>
             </button>
           </li>
           <li>
-            <button id="btn-clean_execute" disabled>
+            <button id="btn-clean_execution" disabled>
               <i class="fa-solid fa-eraser"></i>
             </button>
           </li>
@@ -98,9 +98,18 @@
     <!-- CANVAS -->
     <svg id="canvas" width="100%" height="100%" viewBox="0 0 1200 700">
       <defs>
-        <marker id="arrowhead" orient="auto" markerUnits="userSpaceOnUse" markerWidth="20" markerHeight="12" refX="36"
-          refY="6">
-          <path d="M0,0 V12 L20,6 Z" fill="black" stroke-width="3px"></path>
+        <marker id="arrowhead" orient="auto" markerUnits="userSpaceOnUse" markerWidth="19" markerHeight="15" refX="39"
+          refY="7.5">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M2.00686 14.4884H1.43619C1.09138 14.423 0.776803 14.24 0.569826 13.9598C0.201536 13.4613 0.272124 12.7994 0.741694 12.3757L6.14329 7.50152L0.741695 2.62733C0.272125 2.20361 0.198466 1.53895 0.569826 1.04322C0.941185 0.547492 1.64708 0.353632 2.26089 0.586263L17.4836 6.34666C17.9992 6.54052 18.3337 6.99748 18.3337 7.50152C18.3337 8.00555 17.9992 8.46251 17.4836 8.65637L2.26089 14.4168C2.1776 14.4483 2.09256 14.4721 2.00686 14.4884Z"
+            fill="#303952" />
+        </marker>
+
+        <marker id="arrowhead_temp" orient="auto" markerUnits="userSpaceOnUse" markerWidth="19" markerHeight="15"
+          refX="18" refY="7.5">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M2.00686 14.4884H1.43619C1.09138 14.423 0.776803 14.24 0.569826 13.9598C0.201536 13.4613 0.272124 12.7994 0.741694 12.3757L6.14329 7.50152L0.741695 2.62733C0.272125 2.20361 0.198466 1.53895 0.569826 1.04322C0.941185 0.547492 1.64708 0.353632 2.26089 0.586263L17.4836 6.34666C17.9992 6.54052 18.3337 6.99748 18.3337 7.50152C18.3337 8.00555 17.9992 8.46251 17.4836 8.65637L2.26089 14.4168C2.1776 14.4483 2.09256 14.4721 2.00686 14.4884Z"
+            fill="#303952" />
         </marker>
       </defs>
 
@@ -111,17 +120,67 @@
     <!-- MODALS -->
     <dialog id="new_graph_modal">
       <div class="header">
-        <h3>Test modal title</h3>
+        <h3>Create New Graph</h3>
       </div>
       <div class="body">
         <form id="new_graph_form">
-          <p>Test text 1</p>
-          <p>Test text Test text Test text Test text Test text</p>
-          <input type="text">
+          <div class="form-input">
+            <label for="graph_type">Graph Type:</label>
+            <select id="graph_type" name="graph_type">
+              <option value="undirected">Undirected</option>
+              <option value="directed">Directed</option>
+            </select>
+          </div>
+
+          <div class="form-input">
+            <label for="weighted_graph">Weighted Graph:</label>
+            <input type="checkbox" name="weighted_graph" id="weighted_graph">
+          </div>
+
+          <div class="form-input">
+            <label for="autoname">Naming Nodes Automatically:</label>
+            <input type="checkbox" name="autoname" id="autoname" checked>
+          </div>
         </form>
         <div class="buttons">
-          <button form="new_graph_form" class="primary" modal-accept>Create</button>
           <button class="secondary" modal-cancel>Cancel</button>
+          <button form="new_graph_form" class="primary" modal-accept>Create</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="name_node_modal">
+      <div class="header">
+        <h3>Create a Node</h3>
+      </div>
+      <div class="body">
+        <form id="name_node_form">
+          <div class="form-input">
+            <label for="node_name">Node Name:</label>
+            <input type="text" name="node_name" id="node_name" autocomplete="off">
+          </div>
+        </form>
+        <div class="buttons">
+          <button class="secondary" modal-cancel>Cancel</button>
+          <button form="name_node_form" class="primary" modal-accept>Create Node</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="edge_weight_modal">
+      <div class="header">
+        <h3>Create an Edge</h3>
+      </div>
+      <div class="body">
+        <form id="edge_weight_form">
+          <div class="form-input">
+            <label for="edge_weight">Edge Weight:</label>
+            <input type="number" name="edge_weight" id="edge_weight">
+          </div>
+        </form>
+        <div class="buttons">
+          <button class="secondary" modal-cancel>Cancel</button>
+          <button form="edge_weight_form" class="primary" modal-accept>Create Edge</button>
         </div>
       </div>
     </dialog>
