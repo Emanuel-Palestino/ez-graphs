@@ -52,7 +52,7 @@ export class Node {
 
 		// Set node properties
 		this.id = `node_${autoname ? Node.nodeCount : name}`
-		this.state = 'unvisited'
+		this.state = this.state = statesNodes.Unvisited
 		this.distance = Infinity
 		this.finished = false
 		this.previous = null
