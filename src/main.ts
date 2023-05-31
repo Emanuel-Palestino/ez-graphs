@@ -16,10 +16,13 @@ btnNewGraph.addEventListener('click', async () => {
 		e.preventDefault()
 		const data = new FormData(form)
 		editor.createNewGraph(data.get('graph_type') === 'directed', !!data.get('weighted_graph'), !!data.get('autoname'))
+		btnCleanGraph.disabled = false
+
 		btnDrawNode.disabled = false
 		btnDrawEdge.disabled = false
 		btnDeleteElement.disabled = false
-		btnCleanGraph.disabled = false
+
+		document.querySelector('#algorithm_execution')!.removeAttribute('disabled')
 		btnPlay.disabled = false
 	}
 	form.reset()
@@ -65,5 +68,31 @@ btnDeleteElement.addEventListener('click', () => {
 // Play button
 const btnPlay = document.querySelector<HTMLButtonElement>('#btn-play_execution')!
 btnPlay.addEventListener('click', () => {
+	btnPause.disabled = false
+	btnStop.disabled = false
+	activateButton(btnPlay)
+
 	console.log('play', editor.getAdyacencyList())
+})
+
+// Pause button
+const btnPause = document.querySelector<HTMLButtonElement>('#btn-pause_execution')!
+btnPause.addEventListener('click', () => {
+	activateButton(btnPause)
+	console.log('pause')
+})
+
+// Stop button
+const btnStop = document.querySelector<HTMLButtonElement>('#btn-stop_execution')!
+btnStop.addEventListener('click', () => {
+	deactivateAllButtons()
+	btnPause.disabled = true
+	btnStop.disabled = true
+	console.log('stop')
+})
+
+// Clean button
+const btnClean = document.querySelector<HTMLButtonElement>('#btn-clean_execution')!
+btnClean.addEventListener('click', () => {
+	console.log('clean')
 })
