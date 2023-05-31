@@ -7,6 +7,9 @@ editor.init()
 // MODALS
 const newGraphModal = new Modal('new_graph_modal')
 
+// Select
+const algorithmSelect = document.querySelector<HTMLSelectElement>('#algorithm_execution')!
+
 // GRAPH BUTTONS
 const btnNewGraph = document.querySelector<HTMLButtonElement>('#btn-new_graph')!
 btnNewGraph.addEventListener('click', async () => {
@@ -22,7 +25,7 @@ btnNewGraph.addEventListener('click', async () => {
 		btnDrawEdge.disabled = false
 		btnDeleteElement.disabled = false
 
-		document.querySelector('#algorithm_execution')!.removeAttribute('disabled')
+		algorithmSelect.disabled = false
 		btnPlay.disabled = false
 	}
 	form.reset()
@@ -68,6 +71,7 @@ btnDeleteElement.addEventListener('click', () => {
 // Play button
 const btnPlay = document.querySelector<HTMLButtonElement>('#btn-play_execution')!
 btnPlay.addEventListener('click', () => {
+	algorithmSelect.disabled = true
 	btnPause.disabled = false
 	btnStop.disabled = false
 	activateButton(btnPlay)
@@ -79,6 +83,7 @@ btnPlay.addEventListener('click', () => {
 const btnPause = document.querySelector<HTMLButtonElement>('#btn-pause_execution')!
 btnPause.addEventListener('click', () => {
 	activateButton(btnPause)
+
 	console.log('pause')
 })
 
@@ -88,6 +93,9 @@ btnStop.addEventListener('click', () => {
 	deactivateAllButtons()
 	btnPause.disabled = true
 	btnStop.disabled = true
+
+	algorithmSelect.disabled = false
+
 	console.log('stop')
 })
 
