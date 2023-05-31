@@ -1,6 +1,6 @@
 const menu = document.querySelector<HTMLMenuElement>('menu')
 
-const deactivateAllButtons = () => {
+export const deactivateAllButtons = () => {
 	menu?.querySelectorAll('section ul li button').forEach(btn => {
 		btn.classList.remove('active')
 	})

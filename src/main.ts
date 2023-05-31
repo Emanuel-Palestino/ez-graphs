@@ -1,6 +1,6 @@
 import { Modal } from "./classes/Modal"
 import { editor } from "./editor"
-import { activateButton } from "./utils/menu"
+import { activateButton, deactivateAllButtons } from "./utils/menu"
 
 editor.init()
 
@@ -28,7 +28,8 @@ btnNewGraph.addEventListener('click', async () => {
 
 const btnCleanGraph = document.querySelector<HTMLButtonElement>('#btn-clean_graph')!
 btnCleanGraph.addEventListener('click', () => {
-	console.log('clean graph')
+	editor.cleanGraph()
+	deactivateAllButtons()
 })
 
 

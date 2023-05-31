@@ -288,4 +288,20 @@ export class Editor {
 			dy: 5 * Math.cos(angle)
 		}
 	}
+
+	public cleanGraph(): void {
+		// Remove all the nodes and edges
+		this.canvas.getElementById('edges')!.innerHTML = ''
+		this.canvas.getElementById('nodes')!.innerHTML = ''
+		this.nodes = {}
+		this.adyacencyList = {}
+		this.edges = {}
+
+		// Reset the counters
+		Node.nodeCount = 0
+		Edge.edgeCount = 0
+
+		// Reset the drawing mode
+		this.drawing = DrawingElement.None
+	}
 }
