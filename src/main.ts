@@ -1,3 +1,5 @@
+import { BFS } from "./algorithms/BFS"
+import { DFS } from "./algorithms/DFS"
 import { Modal } from "./classes/Modal"
 import { editor } from "./editor"
 import { activateButton } from "./utils/menu"
@@ -64,5 +66,9 @@ btnDeleteElement.addEventListener('click', () => {
 // Play button
 const btnPlay = document.querySelector<HTMLButtonElement>('#btn-play_execution')!
 btnPlay.addEventListener('click', () => {
-	console.log('play', editor.getAdyacencyList())
+	//console.log('play', editor.getAdyacencyList())
+	let result = BFS('node_1', editor.getNodes(), editor.getAdyacencyList())
+	console.log(result.Nodes)
+  	console.log(result.Distance)
+  	console.log(result.Previous)
 })

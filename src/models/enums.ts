@@ -5,7 +5,8 @@ export enum DrawingElement {
 	Delete
 }
 
-export enum statesNodes {
+export enum NodesStates {
 	Visited,
-	Unvisited
+	Unvisited,
+	Finalized
 }
