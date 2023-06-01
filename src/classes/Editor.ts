@@ -304,4 +304,14 @@ export class Editor {
 		// Reset the drawing mode
 		this.drawing = DrawingElement.None
 	}
+
+	public disableDrawing(): void {
+		this.drawing = DrawingElement.None
+
+		for (const node of Object.values(this.nodes))
+			node.unselectable()
+
+		for (const edge of Object.values(this.edges))
+			edge.unselecting()
+	}
 }

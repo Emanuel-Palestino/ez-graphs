@@ -76,6 +76,17 @@ btnPlay.addEventListener('click', () => {
 	btnStop.disabled = false
 	activateButton(btnPlay)
 
+	// Disable graph buttons
+	btnNewGraph.disabled = true
+	btnCleanGraph.disabled = true
+
+	// Disable drawing buttons
+	btnDrawNode.disabled = true
+	btnDrawEdge.disabled = true
+	btnDeleteElement.disabled = true
+
+	editor.disableDrawing()
+
 	console.log('play', editor.getAdyacencyList())
 })
 
@@ -95,6 +106,15 @@ btnStop.addEventListener('click', () => {
 	btnStop.disabled = true
 
 	algorithmSelect.disabled = false
+
+	// Enable graph buttons
+	btnNewGraph.disabled = false
+	btnCleanGraph.disabled = false
+
+	// Enable drawing buttons
+	btnDrawNode.disabled = false
+	btnDrawEdge.disabled = false
+	btnDeleteElement.disabled = false
 
 	console.log('stop')
 })
