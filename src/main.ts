@@ -65,10 +65,12 @@ btnDeleteElement.addEventListener('click', () => {
 
 // Play button
 const btnPlay = document.querySelector<HTMLButtonElement>('#btn-play_execution')!
-btnPlay.addEventListener('click', () => {
+btnPlay.addEventListener('click', async () => {
 	//console.log('play', editor.getAdyacencyList())
-	let result = BFS('node_1', editor.getNodes(), editor.getAdyacencyList())
+	let result = await DFS('node_3', editor.getNodes(), editor.getAdyacencyList())
 	console.log(result.Nodes)
-  	console.log(result.Distance)
-  	console.log(result.Previous)
+	console.log(result.Distance)
+	console.log(result.Finished)
+	console.log(result.Previous)
+  	
 })

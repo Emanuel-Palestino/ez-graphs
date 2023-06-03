@@ -1,54 +1,37 @@
-import { Nodes, AdyacencyList } from "../models/interfaces"
+import { Nodes, AdyacencyList, DFSExecutionResults } from "../models/interfaces"
 import { Node } from '../classes/Node'
 import { NodesStates } from '../models/enums'
 
-let row_nodos:any[] = []
-let row_distance:any[] = []
-let row_finished:any[] = []
-let row_previous:any[] = []
+export async function DFS(nodeInit: string, nodeList: Nodes, adyacencyList: AdyacencyList) {
+    let executionResults: DFSExecutionResults = { Nodes: [], Distance: [], Finished: [], Previous: [] }
+    let time: number = 0
 
-
-export async function DFS(node_init: string, nodes_list: Nodes, adyacency_list: AdyacencyList) {
-    let time:number = 0
-    
-    await DFS_visited (nodes_list[node_init],time, adyacency_list, nodes_list)
-
-    for(let key in nodes_list){
-        if(nodes_list[key].state == NodesStates.Unvisited){
-            console.log('**')
-            await DFS_visited (nodes_list[key],time, adyacency_list, nodes_list)
-        }
-    }
+    time = await DFS_visited(nodeList[nodeInit], time, adyacencyList, nodeList)
 
     //Add information
-    for(let key in nodes_list){
-        row_nodos.push(nodes_list[key].id)
-        row_distance.push(nodes_list[key].distance)
-        row_finished.push(nodes_list[key].completed)
-        row_previous.push(nodes_list[key].previous?.id)
+    for (let key in nodeList) {
+        executionResults.Nodes.push(nodeList[key].id)
+        executionResults.Distance.push(nodeList[key].distance.toString())
+        executionResults.Finished.push(nodeList[key].completed.toString())
+        executionResults.Previous.push(nodeList[key].previous?.id as string)
     }
 
-    
-    //Print table    
-    console.log('N: '+row_nodos)
-    console.log('D: '+row_distance)
-    console.log('F: '+row_finished)
-    console.log('P: '+row_previous)
+    return executionResults
 }
 
-async function DFS_visited(node:Node, time:number, adyacency_list:AdyacencyList, nodes_list: Nodes){
+async function DFS_visited(node: Node, time: number, adyacencyList: AdyacencyList, nodeList: Nodes) {
     // - Step 3 -
     //console.log(time,node.id)
     node.state = NodesStates.Visited
     time++
     node.distance = time
 
-    const edge_list = adyacency_list[node.id]
-    for (let key in edge_list){
+    const edge_list = adyacencyList[node.id]
+    for (let key in edge_list) {
         //- Step 4 -
-        if(nodes_list[key].state == NodesStates.Unvisited){
-            nodes_list[key].previous = node
-            await DFS_visited (nodes_list[key],time, adyacency_list, nodes_list)
+        if (nodeList[key].state == NodesStates.Unvisited) {
+            nodeList[key].previous = node
+            time = await DFS_visited(nodeList[key], time, adyacencyList, nodeList)
         }
     }
 
@@ -56,4 +39,6 @@ async function DFS_visited(node:Node, time:number, adyacency_list:AdyacencyList,
     node.state = NodesStates.Finalized
     time++
     node.completed = time
+
+    return time
 }
