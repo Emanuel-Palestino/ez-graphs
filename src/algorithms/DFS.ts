@@ -6,7 +6,7 @@ export async function DFS(nodeInit: string, nodeList: Nodes, adyacencyList: Adya
     let executionResults: DFSExecutionResults = { Nodes: [], Distance: [], Finished: [], Previous: [] }
     let time: number = 0
 
-    time = await DFS_visited(nodeList[nodeInit], time, adyacencyList, nodeList)
+    await DFS_visited(nodeList[nodeInit], time, adyacencyList, nodeList)
 
     //Add information
     for (let key in nodeList) {
