@@ -50,6 +50,10 @@ export class Editor {
 		return this.adyacencyList
 	}
 
+	public getNodes(): Nodes {
+		return this.nodes
+	}
+	
 	public init(): void {
 		this.setupEventListener()
 		this.nameNodeModal = new Modal('name_node_modal')
