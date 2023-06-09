@@ -124,3 +124,25 @@ const btnClean = document.querySelector<HTMLButtonElement>('#btn-clean_execution
 btnClean.addEventListener('click', () => {
 	console.log('clean')
 })
+
+const btnResults = document.querySelector<HTMLButtonElement>('#btn-show_results')!
+btnResults.addEventListener('click', () => {
+	if (btnResults.classList.contains('active')) {
+		deactivateAllButtons()
+
+		// Enable drawing buttons
+		btnDrawNode.disabled = false
+		btnDrawEdge.disabled = false
+		btnDeleteElement.disabled = false
+	} else {
+		activateButton(btnResults)
+		editor.disableDrawing()
+
+		// Disable drawing buttons
+		btnDrawNode.disabled = true
+		btnDrawEdge.disabled = true
+		btnDeleteElement.disabled = true
+	}
+
+	document.getElementById('editor_body')!.classList.toggle('showing-results')
+})

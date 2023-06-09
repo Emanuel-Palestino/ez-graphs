@@ -105,6 +105,52 @@ menu section ul li button.active {
 }
 
 
+/* ALGORITHM RESULTS */
+#editor_body #algorithm_results {
+	width: calc(100% - 16px);
+	min-height: 0px;
+	max-height: 0px;
+	background-color: var(--bg-primary);
+	color: white;
+	border-radius: 12px;
+	padding: 0px;
+	text-align: center;
+	overflow: hidden;
+	margin: 0px auto;
+	transition: min-height 300ms, max-height 300ms, margin 300ms;
+}
+
+#editor_body.showing-results #algorithm_results {
+	margin: 8px auto;
+	min-height: 200px;
+	max-height: 200px;
+}
+
+#editor_body #algorithm_results table {
+	margin: 0 auto;
+	margin-top: 8px;
+	border-collapse: collapse;
+	border: 1px solid #fff;
+}
+
+#editor_body #algorithm_results table tr {
+	border-top: 1px solid var(--text-secondary);
+	border-bottom: 1px solid var(--text-secondary);
+	color: var(--text-secondary);
+}
+
+#editor_body #algorithm_results table tr td,
+#editor_body #algorithm_results table tr th {
+	padding: 6px 12px;
+}
+
+#editor_body #algorithm_results table tr th {
+	color: #fff;
+	text-align: left;
+}
+
+
+
 /* INPUT */
 input,
 select {
@@ -145,11 +191,12 @@ li select {
 
 
 /* CANVAS */
-#canvas {
+#editor_body #canvas {
 	display: block;
 	width: 100%;
 	height: calc(100vh - 160px);
 	border: 1px solid #ddd;
+	transition: height 300ms;
 
 	--d: 2px;
 	background: radial-gradient(circle at var(--d) var(--d),
@@ -157,8 +204,12 @@ li select {
 			transparent var(--d)) 7px 7px / 24px 24px;
 }
 
-#canvas.dragging-edge {
+#editor_body #canvas.dragging-edge {
 	cursor: pointer;
+}
+
+#editor_body.showing-results #canvas {
+	height: calc(100vh - 152px - 200px - 16px);
 }
 
 
