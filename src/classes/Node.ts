@@ -100,4 +100,10 @@ export class Node {
 
 		this.circle.classList.add('deleting')
 	}
+
+	public unselectable(): void {
+		this.circle.classList.remove('drawing')
+		this.circle.classList.remove('selecting')
+		this.circle.classList.remove('deleting')
+	}
 }

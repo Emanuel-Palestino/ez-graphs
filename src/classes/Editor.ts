@@ -171,13 +171,13 @@ export class Editor {
 			this.canvas.querySelectorAll<SVGPathElement>(`.edge[from-node="${Node.nodeDragged.id}"], .edge[to-node="${Node.nodeDragged.id}"]`).forEach(edge => {
 				const currentEdge = this.edges[edge.id]
 				if (currentEdge.from === Node.nodeDragged) {
-					if (this.adyacencyList[currentEdge.to.id][currentEdge.from.id]) {
+					if (this.directed && this.adyacencyList[currentEdge.to.id][currentEdge.from.id]) {
 						const displacement = this.getDisplacement(currentEdge.from, currentEdge.to, currentEdge.from.y < currentEdge.to.y)
 						currentEdge.moveFrom(e.offsetX, e.offsetY, displacement.dx, displacement.dy)
 					} else
 						currentEdge.moveFrom(e.offsetX, e.offsetY)
 				} else {
-					if (this.adyacencyList[currentEdge.to.id][currentEdge.from.id]) {
+					if (this.directed && this.adyacencyList[currentEdge.to.id][currentEdge.from.id]) {
 						const displacement = this.getDisplacement(currentEdge.from, currentEdge.to, currentEdge.to.y < currentEdge.from.y)
 						currentEdge.moveTo(e.offsetX, e.offsetY, displacement.dx, displacement.dy)
 					} else
@@ -291,5 +291,31 @@ export class Editor {
 			dx: 5 * Math.sin(angle),
 			dy: 5 * Math.cos(angle)
 		}
+	}
+
+	public cleanGraph(): void {
+		// Remove all the nodes and edges
+		this.canvas.getElementById('edges')!.innerHTML = ''
+		this.canvas.getElementById('nodes')!.innerHTML = ''
+		this.nodes = {}
+		this.adyacencyList = {}
+		this.edges = {}
+
+		// Reset the counters
+		Node.nodeCount = 0
+		Edge.edgeCount = 0
+
+		// Reset the drawing mode
+		this.drawing = DrawingElement.None
+	}
+
+	public disableDrawing(): void {
+		this.drawing = DrawingElement.None
+
+		for (const node of Object.values(this.nodes))
+			node.unselectable()
+
+		for (const edge of Object.values(this.edges))
+			edge.unselecting()
 	}
 }
