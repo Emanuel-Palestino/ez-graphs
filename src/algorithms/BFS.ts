@@ -2,7 +2,7 @@ import { Nodes, AdyacencyList, BFSExecutionResults } from "../models/interfaces"
 import { Node } from "../classes/Node"
 import { NodesStates } from "../models/enums"
 
-export function BFS(NodeInt: string, NodeList: Nodes, AdyacencyList: AdyacencyList) {
+export function BFS(NodeInt: string, NodeList: Nodes, AdyacencyList: AdyacencyList):BFSExecutionResults {
     let queue_nodes: Node[] = []
 
     let resultsExecution: BFSExecutionResults = {

@@ -2,7 +2,7 @@ import { Nodes, AdyacencyList, DFSExecutionResults } from "../models/interfaces"
 import { Node } from '../classes/Node'
 import { NodesStates } from '../models/enums'
 
-export async function DFS(nodeInit: string, nodeList: Nodes, adyacencyList: AdyacencyList) {
+export async function DFS(nodeInit: string, nodeList: Nodes, adyacencyList: AdyacencyList):Promise<DFSExecutionResults> {
     let executionResults: DFSExecutionResults = { Nodes: [], Distance: [], Finished: [], Previous: [] }
     let time: number = 0
 
