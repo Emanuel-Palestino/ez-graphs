@@ -14,9 +14,7 @@ export class Node {
 	public state: NodesStates
 	public distance: number
 	public completed:number
-	private finished: boolean
 	public previous: Node | null
-	private edges: any[]
 
 	public static nodeCount: number = 0
 	public static nodeDragged: Node | null = null
@@ -55,9 +53,7 @@ export class Node {
 		this.id = `node_${autoname ? Node.nodeCount : name}`
 		this.state = this.state = NodesStates.Unvisited
 		this.distance = Infinity
-		this.finished = false
 		this.previous = null
-		this.edges = []
 		this.completed = Infinity
 	}
 
