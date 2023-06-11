@@ -2,6 +2,7 @@ import { BFS } from "./algorithms/BFS"
 import { DFS } from "./algorithms/DFS"
 import { Modal } from "./classes/Modal"
 import { editor } from "./editor"
+import { showBFSResult } from "./utils/execution"
 import { activateButton, deactivateAllButtons } from "./utils/menu"
 
 editor.init()
@@ -93,7 +94,7 @@ btnPlay.addEventListener('click', async () => {
 	switch (algorithmSelect.value) {
 		case 'bfs':
 			let BFSResult = await BFS('node_1', editor.getNodes(), editor.getAdyacencyList())
-			console.log(BFSResult)
+			showBFSResult(BFSResult)
 			break
 
 		case 'dfs':
@@ -107,6 +108,16 @@ btnPlay.addEventListener('click', async () => {
 		default:
 			console.log('No algorithm selected')
 	}
+
+	// Enable graph buttons
+	btnNewGraph.disabled = false
+	btnCleanGraph.disabled = false
+
+	// Enable algorithm buttons
+	algorithmSelect.disabled = false
+
+	// Trigger results button click
+	btnResults.click()
 })
 
 // Pause button

@@ -1,14 +1,8 @@
-import { Nodes, AdyacencyList, BFSExecutionResults } from "../models/interfaces"
+import { Nodes, AdyacencyList, BFSExecutionResult } from "../models/interfaces"
 import { Node } from "../classes/Node"
 import { NodeState } from "../models/enums"
 
-export const BFS = async (initialNodeId: string, nodesList: Nodes, adyacencyList: AdyacencyList) => {
-    let executionResults: BFSExecutionResults = {
-        Nodes: [],
-        Distance: [],
-        Previous: []
-    }
-
+export const BFS = async (initialNodeId: string, nodesList: Nodes, adyacencyList: AdyacencyList): Promise<BFSExecutionResult> => {
     //We start the start node - Step 2 -
     nodesList[initialNodeId].state = NodeState.Visited
     nodesList[initialNodeId].distance = 0
@@ -39,11 +33,18 @@ export const BFS = async (initialNodeId: string, nodesList: Nodes, adyacencyList
         u_node.state = NodeState.Finalized
     }
 
-    for (let nodeId in nodesList) {
-        executionResults.Nodes.push(nodesList[nodeId].id)
-        executionResults.Distance.push(nodesList[nodeId].distance.toString())
-        executionResults.Previous.push(nodesList[nodeId].previous?.id || 'null')
+    // Result
+    let result: BFSExecutionResult = {
+        Nodes: [],
+        Distance: [],
+        Previous: []
     }
 
-    return executionResults
+    for (let nodeId in nodesList) {
+        result.Nodes.push(nodesList[nodeId].id)
+        result.Distance.push(nodesList[nodeId].distance.toString())
+        result.Previous.push(nodesList[nodeId].previous?.id || 'null')
+    }
+
+    return result
 }

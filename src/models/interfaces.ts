@@ -13,7 +13,7 @@ export interface AdyacencyList {
   [key: string]: Edges
 }
 
-export interface BFSExecutionResults {
+export interface BFSExecutionResult {
   Nodes: string[]
   Distance: string[]
   Previous: string[]
