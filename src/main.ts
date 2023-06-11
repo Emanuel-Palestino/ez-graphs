@@ -92,11 +92,10 @@ btnPlay.addEventListener('click', async () => {
 	// Algorithm execution
 	switch (algorithmSelect.value) {
 		case 'bfs':
-			let resultBFS = BFS('node_1', editor.getNodes(), editor.getAdyacencyList())
-			console.log(resultBFS.Nodes)
-			console.log(resultBFS.Distance)
-			console.log(resultBFS.Previous)
+			let BFSResult = await BFS('node_1', editor.getNodes(), editor.getAdyacencyList())
+			console.log(BFSResult)
 			break
+
 		case 'dfs':
 			let result = await DFS('node_1', editor.getNodes(), editor.getAdyacencyList())
 			console.log(result.Nodes)

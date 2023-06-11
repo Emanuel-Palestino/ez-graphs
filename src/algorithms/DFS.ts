@@ -1,6 +1,6 @@
 import { Nodes, AdyacencyList, DFSExecutionResults } from "../models/interfaces"
 import { Node } from '../classes/Node'
-import { NodesStates } from '../models/enums'
+import { NodeState } from '../models/enums'
 
 export async function DFS(nodeInit: string, nodeList: Nodes, adyacencyList: AdyacencyList) {
     let executionResults: DFSExecutionResults = { Nodes: [], Distance: [], Finished: [], Previous: [] }
@@ -22,21 +22,21 @@ export async function DFS(nodeInit: string, nodeList: Nodes, adyacencyList: Adya
 async function DFS_visited(node: Node, time: number, adyacencyList: AdyacencyList, nodeList: Nodes) {
     // - Step 3 -
     //console.log(time,node.id)
-    node.state = NodesStates.Visited
+    node.state = NodeState.Visited
     time++
     node.distance = time
 
     const edge_list = adyacencyList[node.id]
     for (let key in edge_list) {
         //- Step 4 -
-        if (nodeList[key].state == NodesStates.Unvisited) {
+        if (nodeList[key].state == NodeState.Unvisited) {
             nodeList[key].previous = node
             time = await DFS_visited(nodeList[key], time, adyacencyList, nodeList)
         }
     }
 
     //- Step 5 -
-    node.state = NodesStates.Finalized
+    node.state = NodeState.Finalized
     time++
     node.completed = time
 

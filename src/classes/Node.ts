@@ -1,4 +1,5 @@
-import { NodesStates } from '../models/enums'
+import { NodeState } from '../models/enums'
+
 export class Node {
 	// SVG elements
 	public node: SVGGElement
@@ -11,7 +12,7 @@ export class Node {
 	public id: string
 
 	// Private node properties
-	public state: NodesStates
+	public state: NodeState
 	public distance: number
 	public completed:number
 	public previous: Node | null
@@ -51,7 +52,7 @@ export class Node {
 
 		// Set node properties
 		this.id = `node_${autoname ? Node.nodeCount : name}`
-		this.state = this.state = NodesStates.Unvisited
+		this.state = this.state = NodeState.Unvisited
 		this.distance = Infinity
 		this.previous = null
 		this.completed = Infinity
