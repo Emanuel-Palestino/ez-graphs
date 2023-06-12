@@ -10,3 +10,19 @@ export const activateButton = (btn: HTMLButtonElement) => {
 	deactivateAllButtons()
 	btn.classList.add('active')
 }
+
+export const disableButtons = (...buttons: (HTMLButtonElement | HTMLSelectElement)[]): () => void => {
+	return () => {
+		buttons.forEach(btn => {
+			btn.disabled = true
+		})
+	}
+}
+
+export const enableButtons = (...buttons: (HTMLButtonElement | HTMLSelectElement)[]): () => void => {
+	return () => {
+		buttons.forEach(btn => {
+			btn.disabled = false
+		})
+	}
+}

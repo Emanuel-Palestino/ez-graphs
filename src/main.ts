@@ -3,34 +3,34 @@ import { DFS } from "./algorithms/DFS"
 import { Modal } from "./classes/Modal"
 import { editor } from "./editor"
 import { showBFSResult } from "./utils/execution"
-import { activateButton, deactivateAllButtons } from "./utils/menu"
+import { activateButton, deactivateAllButtons, disableButtons, enableButtons } from "./utils/menu"
 
 editor.init()
 
-// MODALS
+// Modals
 const newGraphModal = new Modal('new_graph_modal')
 
 // Select
 const algorithmSelect = document.querySelector<HTMLSelectElement>('#algorithm_execution')!
+
 
 // GRAPH BUTTONS
 const btnNewGraph = document.querySelector<HTMLButtonElement>('#btn-new_graph')!
 btnNewGraph.addEventListener('click', async () => {
 	const e = await newGraphModal.showAsync()
 	const form = document.querySelector<HTMLFormElement>('#new_graph_form')!
+
+	// If a new graph is created, enable the buttons
 	if (e) {
 		e.preventDefault()
 		const data = new FormData(form)
 		editor.createNewGraph(data.get('graph_type') === 'directed', !!data.get('weighted_graph'), !!data.get('autoname'))
-		btnCleanGraph.disabled = false
 
-		btnDrawNode.disabled = false
-		btnDrawEdge.disabled = false
-		btnDeleteElement.disabled = false
-
-		algorithmSelect.disabled = false
-		btnPlay.disabled = false
+		enableGraphButtons()
+		enableDrawingButtons()
+		enablePlayExecutionButtons()
 	}
+
 	form.reset()
 	form.querySelector<HTMLInputElement>('#autoname')!.checked = true
 })
@@ -74,19 +74,12 @@ btnDeleteElement.addEventListener('click', () => {
 // Play button
 const btnPlay = document.querySelector<HTMLButtonElement>('#btn-play_execution')!
 btnPlay.addEventListener('click', async () => {
-	algorithmSelect.disabled = true
-	btnPause.disabled = false
-	btnStop.disabled = false
 	activateButton(btnPlay)
 
-	// Disable graph buttons
-	btnNewGraph.disabled = true
-	btnCleanGraph.disabled = true
-
-	// Disable drawing buttons
-	btnDrawNode.disabled = true
-	btnDrawEdge.disabled = true
-	btnDeleteElement.disabled = true
+	algorithmSelect.disabled = true
+	disableGraphButtons()
+	disableDrawingButtons()
+	enableControlExecutionButtons()
 
 	editor.disableDrawing()
 
@@ -109,12 +102,12 @@ btnPlay.addEventListener('click', async () => {
 			console.log('No algorithm selected')
 	}
 
-	// Enable graph buttons
-	btnNewGraph.disabled = false
-	btnCleanGraph.disabled = false
-
-	// Enable algorithm buttons
-	algorithmSelect.disabled = false
+	// Algorithm execution finished
+	disableControlExecutionButtons()
+	enableGraphButtons()
+	enableDrawingButtons()
+	enablePlayExecutionButtons()
+	btnResults.disabled = false
 
 	// Trigger results button click
 	btnResults.click()
@@ -132,21 +125,10 @@ btnPause.addEventListener('click', () => {
 const btnStop = document.querySelector<HTMLButtonElement>('#btn-stop_execution')!
 btnStop.addEventListener('click', () => {
 	deactivateAllButtons()
-	btnPause.disabled = true
-	btnStop.disabled = true
-
-	algorithmSelect.disabled = false
-
-	// Enable graph buttons
-	btnNewGraph.disabled = false
-	btnCleanGraph.disabled = false
-
-	// Enable drawing buttons
-	btnDrawNode.disabled = false
-	btnDrawEdge.disabled = false
-	btnDeleteElement.disabled = false
-
-	console.log('stop')
+	disableControlExecutionButtons()
+	enablePlayExecutionButtons()
+	enableGraphButtons()
+	enableDrawingButtons()
 })
 
 // Clean button
@@ -159,20 +141,29 @@ const btnResults = document.querySelector<HTMLButtonElement>('#btn-show_results'
 btnResults.addEventListener('click', () => {
 	if (btnResults.classList.contains('active')) {
 		deactivateAllButtons()
-
-		// Enable drawing buttons
-		btnDrawNode.disabled = false
-		btnDrawEdge.disabled = false
-		btnDeleteElement.disabled = false
+		enableDrawingButtons()
+		enablePlayExecutionButtons()
 	} else {
 		activateButton(btnResults)
 		editor.disableDrawing()
-
-		// Disable drawing buttons
-		btnDrawNode.disabled = true
-		btnDrawEdge.disabled = true
-		btnDeleteElement.disabled = true
+		disableDrawingButtons()
+		disablePlayExecutionButtons()
 	}
 
 	document.getElementById('editor_body')!.classList.toggle('showing-results')
 })
+
+
+
+// Functions
+const disableDrawingButtons = disableButtons(btnDrawNode, btnDrawEdge, btnDeleteElement)
+const enableDrawingButtons = enableButtons(btnDrawNode, btnDrawEdge, btnDeleteElement)
+
+const disableGraphButtons = disableButtons(btnNewGraph, btnCleanGraph)
+const enableGraphButtons = enableButtons(btnNewGraph, btnCleanGraph)
+
+const disablePlayExecutionButtons = disableButtons(algorithmSelect, btnPlay)
+const enablePlayExecutionButtons = enableButtons(algorithmSelect, btnPlay)
+
+const disableControlExecutionButtons = disableButtons(btnPause, btnStop)
+const enableControlExecutionButtons = enableButtons(btnPause, btnStop)

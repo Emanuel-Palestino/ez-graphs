@@ -2,6 +2,7 @@ import { Nodes, AdyacencyList, BFSExecutionResult } from "../models/interfaces"
 import { Node } from "../classes/Node"
 import { NodeState } from "../models/enums"
 
+
 export const BFS = async (initialNodeId: string, nodesList: Nodes, adyacencyList: AdyacencyList): Promise<BFSExecutionResult> => {
     //We start the start node - Step 2 -
     nodesList[initialNodeId].state = NodeState.Visited
