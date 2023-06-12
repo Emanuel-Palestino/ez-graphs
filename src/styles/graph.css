@@ -75,6 +75,6 @@
 }
 
 .full-edge .edge.visited {
-	stroke-width: 4px;
+	stroke-width: 5px;
 	stroke: var(--edge-visited);
 }
