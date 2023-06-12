@@ -14,7 +14,7 @@ export class Node {
 	// Private node properties
 	public state: NodeState
 	public distance: number
-	public completed:number
+	public completed: number
 	public previous: Node | null
 
 	public static nodeCount: number = 0
@@ -110,5 +110,14 @@ export class Node {
 
 	public setVisited(): void {
 		this.circle.classList.add('visited')
+	}
+
+	public resetNode(): void {
+		this.circle.classList.remove('visited')
+		this.circle.classList.remove('start-node')
+		this.state = NodeState.Unvisited
+		this.distance = Infinity
+		this.previous = null
+		this.completed = Infinity
 	}
 }

@@ -148,4 +148,8 @@ export class Edge {
 	public setVisted(): void {
 		this.line.classList.add('visited')
 	}
+
+	public setUnvisited(): void {
+		this.line.classList.remove('visited')
+	}
 }

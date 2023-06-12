@@ -318,4 +318,12 @@ export class Editor {
 		for (const edge of Object.values(this.edges))
 			edge.unselecting()
 	}
+
+	public resetExecution(): void {
+		for (const node of Object.values(this.nodes))
+			node.resetNode()
+
+		for (const edge of Object.values(this.edges))
+			edge.setUnvisited()
+	}
 }

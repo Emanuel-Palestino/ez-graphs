@@ -82,6 +82,7 @@ btnPlay.addEventListener('click', async () => {
 	enableControlExecutionButtons()
 
 	editor.disableDrawing()
+	editor.resetExecution()
 
 	// Algorithm execution
 	switch (algorithmSelect.value) {
