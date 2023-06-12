@@ -19,7 +19,7 @@ export interface BFSExecutionResult {
   Previous: string[]
 }
 
-export interface DFSExecutionResults {
+export interface DFSExecutionResult {
   Nodes: string[]
   Distance: string[]
   Finished: string[]

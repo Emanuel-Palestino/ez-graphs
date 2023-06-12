@@ -2,7 +2,7 @@ import { BFS } from "./algorithms/BFS"
 import { DFS } from "./algorithms/DFS"
 import { Modal } from "./classes/Modal"
 import { editor } from "./editor"
-import { showBFSResult } from "./utils/execution"
+import { showBFSResult, showDFSResult } from "./utils/execution"
 import { activateButton, deactivateAllButtons, disableButtons, enableButtons } from "./utils/menu"
 
 editor.init()
@@ -87,16 +87,13 @@ btnPlay.addEventListener('click', async () => {
 	// Algorithm execution
 	switch (algorithmSelect.value) {
 		case 'bfs':
-			let BFSResult = await BFS('node_1', editor.getNodes(), editor.getAdyacencyList())
+			const BFSResult = await BFS('node_1', editor.getNodes(), editor.getAdyacencyList())
 			showBFSResult(BFSResult)
 			break
 
 		case 'dfs':
-			let result = await DFS('node_1', editor.getNodes(), editor.getAdyacencyList())
-			console.log(result.Nodes)
-			console.log(result.Distance)
-			console.log(result.Finished)
-			console.log(result.Previous)
+			const DFSResult = await DFS('node_1', editor.getNodes(), editor.getAdyacencyList())
+			showDFSResult(DFSResult)
 			break
 
 		default:

@@ -1,41 +1,53 @@
-import { Nodes, AdyacencyList, DFSExecutionResults } from "../models/interfaces"
+import { Nodes, AdyacencyList, DFSExecutionResult } from '../models/interfaces'
 import { Node } from '../classes/Node'
 import { NodeState } from '../models/enums'
+import { sleep } from '../utils/execution'
 
-export async function DFS(nodeInit: string, nodeList: Nodes, adyacencyList: AdyacencyList) {
-    let executionResults: DFSExecutionResults = { Nodes: [], Distance: [], Finished: [], Previous: [] }
+export async function DFS(initialNodeId: string, nodesList: Nodes, adyacencyList: AdyacencyList): Promise<DFSExecutionResult> {
     let time: number = 0
+    nodesList[initialNodeId].setStartNode()
 
-    await DFS_visited(nodeList[nodeInit], time, adyacencyList, nodeList)
-
-    //Add information
-    for (let key in nodeList) {
-        executionResults.Nodes.push(nodeList[key].id)
-        executionResults.Distance.push(nodeList[key].distance.toString())
-        executionResults.Finished.push(nodeList[key].completed.toString())
-        executionResults.Previous.push(nodeList[key].previous?.id as string)
+    for (const u of [nodesList[initialNodeId], ...Object.values(nodesList)]) {
+        if (u.state === NodeState.Unvisited) {
+            // - Step 2 -
+            await sleep(200)
+            time = await DFS_visited(u, time, adyacencyList, nodesList)
+        }
     }
 
-    return executionResults
+    // Result
+    let result: DFSExecutionResult = { Nodes: [], Distance: [], Finished: [], Previous: [] }
+    for (let key in nodesList) {
+        result.Nodes.push(nodesList[key].id)
+        result.Distance.push(nodesList[key].distance.toString())
+        result.Finished.push(nodesList[key].completed.toString())
+        result.Previous.push(nodesList[key].previous?.id || 'null')
+    }
+
+    return result
 }
 
-async function DFS_visited(node: Node, time: number, adyacencyList: AdyacencyList, nodeList: Nodes) {
+async function DFS_visited(node: Node, time: number, adyacencyList: AdyacencyList, nodeList: Nodes): Promise<number> {
     // - Step 3 -
-    //console.log(time,node.id)
+    await sleep(200)
     node.state = NodeState.Visited
     time++
     node.distance = time
 
-    const edge_list = adyacencyList[node.id]
-    for (let key in edge_list) {
-        //- Step 4 -
-        if (nodeList[key].state == NodeState.Unvisited) {
-            nodeList[key].previous = node
-            time = await DFS_visited(nodeList[key], time, adyacencyList, nodeList)
+    for (const adyacentNodeId in adyacencyList[node.id]) {
+        if (nodeList[adyacentNodeId].state == NodeState.Unvisited) {
+            //- Step 4 -
+            await sleep(200)
+            nodeList[adyacentNodeId].previous = node
+            nodeList[adyacentNodeId].setVisited()
+            adyacencyList[node.id][adyacentNodeId].setVisted()
+
+            time = await DFS_visited(nodeList[adyacentNodeId], time, adyacencyList, nodeList)
         }
     }
 
-    //- Step 5 -
+    // - Step 5 -
+    await sleep(200)
     node.state = NodeState.Finalized
     time++
     node.completed = time
