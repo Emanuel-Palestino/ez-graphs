@@ -103,4 +103,12 @@ export class Node {
 		this.circle.classList.remove('selecting')
 		this.circle.classList.remove('deleting')
 	}
+
+	public setStartNode(): void {
+		this.circle.classList.add('start-node')
+	}
+
+	public setVisited(): void {
+		this.circle.classList.add('visited')
+	}
 }

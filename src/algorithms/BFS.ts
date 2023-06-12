@@ -7,6 +7,7 @@ export const BFS = async (initialNodeId: string, nodesList: Nodes, adyacencyList
     //We start the start node - Step 2 -
     nodesList[initialNodeId].state = NodeState.Visited
     nodesList[initialNodeId].distance = 0
+    nodesList[initialNodeId].setStartNode()
 
     let queue: Node[] = []
 
@@ -24,6 +25,8 @@ export const BFS = async (initialNodeId: string, nodesList: Nodes, adyacencyList
                 nodesList[nodeId].state = NodeState.Visited
                 nodesList[nodeId].distance = u_node.distance + 1
                 nodesList[nodeId].previous = u_node
+                nodesList[nodeId].setVisited()
+                adyacencyList[u_node.id][nodeId].setVisted()
 
                 // - Step 6 -
                 queue.push(nodesList[nodeId])

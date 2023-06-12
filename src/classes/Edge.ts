@@ -144,4 +144,8 @@ export class Edge {
 
 		this.line.setAttributeNS(null, 'd', `M ${this.from.x},${this.from.y} L ${this.to.x},${this.to.y}`)
 	}
+
+	public setVisted(): void {
+		this.line.classList.add('visited')
+	}
 }

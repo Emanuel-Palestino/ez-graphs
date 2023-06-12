@@ -1,7 +1,12 @@
 :root {
 	--bg-primary: #303952;
 	--bg-opaque: #404c6b;
-	--bg-secondary: #3dc1d3;
+	--bg-secondary: #63cdda;
+	--border-start-node: #574b90;
+	--bg-start-node: #786fa6;
+	--border-visited-node: #e66767;
+	--bg-visited-node: #ea8685;
+	--edge-visited: #546de5;
 }
 
 
@@ -37,6 +42,16 @@
 	cursor: grabbing;
 }
 
+.full-node .node.start-node {
+	stroke: var(--border-start-node);
+	fill: var(--bg-start-node);
+}
+
+.full-node .node.visited {
+	stroke: var(--border-visited-node);
+	fill: var(--bg-visited-node);
+}
+
 
 /* EDGE */
 .full-edge {
@@ -57,4 +72,9 @@
 
 .full-edge .edge.selecting {
 	cursor: crosshair;
+}
+
+.full-edge .edge.visited {
+	stroke-width: 4px;
+	stroke: var(--edge-visited);
 }
