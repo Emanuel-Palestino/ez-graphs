@@ -72,12 +72,12 @@ btnDeleteElement.addEventListener('click', () => {
 // Play button
 const btnPlay = document.querySelector<HTMLButtonElement>('#btn-play_execution')!
 btnPlay.addEventListener('click', async () => {
+	activateButton(btnPlay)
+
 	if (editor.isExecutionPaused()) {
 		editor.resumeExecution()
 		return
 	}
-
-	activateButton(btnPlay)
 
 	algorithmSelect.disabled = true
 	disableGraphButtons()

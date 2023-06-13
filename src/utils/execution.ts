@@ -1,9 +1,22 @@
+import { editor } from '../editor'
 import { BFSExecutionResult, DFSExecutionResult } from '../models/interfaces'
 
 
 // FUNCTIONS
 export const sleep = (ms: number): Promise<void> => {
-	return new Promise(resolve => setTimeout(resolve, ms))
+	return new Promise(resolve => setTimeout(() => {
+		if (!editor.isExecutionPaused())
+			return resolve()
+
+		const subscription = editor.getObservable().subscribe({
+			next: paused => {
+				if (!paused) {
+					subscription.unsubscribe()
+					resolve()
+				}
+			}
+		})
+	}, ms))
 }
 
 // RESULTS
@@ -49,7 +62,7 @@ export const showDFSResult = (result: DFSExecutionResult): void => {
 	distanceRow.insertCell().outerHTML = '<th>Distance</th>'
 	for (const distance of result.Distance)
 		distanceRow.insertCell().innerHTML = distance
-	
+
 	// Add finished row
 	const finishedRow = table.insertRow()
 	finishedRow.insertCell().outerHTML = '<th>Finished</th>'

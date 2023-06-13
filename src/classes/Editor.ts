@@ -6,6 +6,7 @@ import { Modal } from './Modal'
 import { BFS } from '../algorithms/BFS'
 import { showBFSResult, showDFSResult } from '../utils/execution'
 import { DFS } from '../algorithms/DFS'
+import { Subject } from 'rxjs'
 
 
 export class Editor {
@@ -29,6 +30,7 @@ export class Editor {
 
 	// Flags
 	private executionPaused: boolean
+	private pausedObservable: Subject<boolean>
 
 	constructor(canvas: SVGSVGElement) {
 		this.canvas = canvas
@@ -52,6 +54,7 @@ export class Editor {
 		this.edgeWeightModal = null
 
 		this.executionPaused = false
+		this.pausedObservable = new Subject<boolean>()
 	}
 
 	public init(): void {
@@ -333,10 +336,16 @@ export class Editor {
 
 	public pauseExecution(): void {
 		this.executionPaused = true
+		this.pausedObservable.next(true)
 	}
 
 	public resumeExecution(): void {
 		this.executionPaused = false
+		this.pausedObservable.next(false)
+	}
+
+	public getObservable(): Subject<boolean> {
+		return this.pausedObservable
 	}
 
 	public async executeAlgorithm(algorithm: Algorithm): Promise<void> {
