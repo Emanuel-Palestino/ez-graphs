@@ -1,5 +1,12 @@
 import { BFSExecutionResult, DFSExecutionResult } from '../models/interfaces'
 
+
+// FUNCTIONS
+export const sleep = (ms: number): Promise<void> => {
+	return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+// RESULTS
 export const showBFSResult = (result: BFSExecutionResult): void => {
 	const table = document.querySelector<HTMLTableElement>('#algorithm_results table')!
 
@@ -54,8 +61,4 @@ export const showDFSResult = (result: DFSExecutionResult): void => {
 	previousRow.insertCell().outerHTML = '<th>Previous</th>'
 	for (const previous of result.Previous)
 		previousRow.insertCell().innerHTML = previous
-}
-
-export const sleep = (ms: number): Promise<void> => {
-	return new Promise(resolve => setTimeout(resolve, ms))
 }

@@ -10,3 +10,8 @@ export enum NodeState {
 	Unvisited,
 	Finalized
 }
+
+export enum Algorithm {
+	BFS,
+	DFS
+}

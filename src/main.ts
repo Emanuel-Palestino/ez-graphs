@@ -1,8 +1,6 @@
-import { BFS } from "./algorithms/BFS"
-import { DFS } from "./algorithms/DFS"
 import { Modal } from "./classes/Modal"
 import { editor } from "./editor"
-import { showBFSResult, showDFSResult } from "./utils/execution"
+import { Algorithm } from "./models/enums"
 import { activateButton, deactivateAllButtons, disableButtons, enableButtons } from "./utils/menu"
 
 editor.init()
@@ -74,6 +72,11 @@ btnDeleteElement.addEventListener('click', () => {
 // Play button
 const btnPlay = document.querySelector<HTMLButtonElement>('#btn-play_execution')!
 btnPlay.addEventListener('click', async () => {
+	if (editor.isExecutionPaused()) {
+		editor.resumeExecution()
+		return
+	}
+
 	activateButton(btnPlay)
 
 	algorithmSelect.disabled = true
@@ -85,20 +88,16 @@ btnPlay.addEventListener('click', async () => {
 	editor.resetExecution()
 
 	// Algorithm execution
+	let algorithmSelected: Algorithm = Algorithm.BFS
 	switch (algorithmSelect.value) {
 		case 'bfs':
-			const BFSResult = await BFS('node_1', editor.getNodes(), editor.getAdyacencyList())
-			showBFSResult(BFSResult)
+			algorithmSelected = Algorithm.BFS
 			break
-
 		case 'dfs':
-			const DFSResult = await DFS('node_1', editor.getNodes(), editor.getAdyacencyList())
-			showDFSResult(DFSResult)
+			algorithmSelected = Algorithm.DFS
 			break
-
-		default:
-			console.log('No algorithm selected')
 	}
+	await editor.executeAlgorithm(algorithmSelected)
 
 	// Algorithm execution finished
 	disableControlExecutionButtons()
@@ -115,8 +114,7 @@ btnPlay.addEventListener('click', async () => {
 const btnPause = document.querySelector<HTMLButtonElement>('#btn-pause_execution')!
 btnPause.addEventListener('click', () => {
 	activateButton(btnPause)
-
-	console.log('pause')
+	editor.pauseExecution()
 })
 
 // Stop button

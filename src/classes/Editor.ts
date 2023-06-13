@@ -1,8 +1,11 @@
 import { Edge } from './Edge'
 import { Node } from './Node'
 import { AdyacencyList, Edges, Nodes } from '../models/interfaces'
-import { DrawingElement } from '../models/enums'
+import { Algorithm, DrawingElement } from '../models/enums'
 import { Modal } from './Modal'
+import { BFS } from '../algorithms/BFS'
+import { showBFSResult, showDFSResult } from '../utils/execution'
+import { DFS } from '../algorithms/DFS'
 
 
 export class Editor {
@@ -24,6 +27,9 @@ export class Editor {
 	private nameNodeModal: Modal | null
 	private edgeWeightModal: Modal | null
 
+	// Flags
+	private executionPaused: boolean
+
 	constructor(canvas: SVGSVGElement) {
 		this.canvas = canvas
 		this.canvas.setAttribute('viewBox', `0 0 ${this.canvas.clientWidth} ${this.canvas.clientHeight}`)
@@ -44,16 +50,10 @@ export class Editor {
 
 		this.nameNodeModal = null
 		this.edgeWeightModal = null
+
+		this.executionPaused = false
 	}
 
-	public getAdyacencyList(): AdyacencyList {
-		return this.adyacencyList
-	}
-
-	public getNodes(): Nodes {
-		return this.nodes
-	}
-	
 	public init(): void {
 		this.setupEventListener()
 		this.nameNodeModal = new Modal('name_node_modal')
@@ -325,5 +325,31 @@ export class Editor {
 
 		for (const edge of Object.values(this.edges))
 			edge.setUnvisited()
+	}
+
+	public isExecutionPaused(): boolean {
+		return this.executionPaused
+	}
+
+	public pauseExecution(): void {
+		this.executionPaused = true
+	}
+
+	public resumeExecution(): void {
+		this.executionPaused = false
+	}
+
+	public async executeAlgorithm(algorithm: Algorithm): Promise<void> {
+		switch (algorithm) {
+			case Algorithm.BFS:
+				const BFSResult = await BFS('node_1', this.nodes, this.adyacencyList)
+				showBFSResult(BFSResult)
+				break
+
+			case Algorithm.DFS:
+				const DFSResult = await DFS('node_1', this.nodes, this.adyacencyList)
+				showDFSResult(DFSResult)
+				break
+		}
 	}
 }
