@@ -18,9 +18,9 @@
 <body>
   <main>
     <header>
-      <h1>EZ-Graphs | Draw graphs and execute search algorithms</h1>
+      <h1>ezGraphs | Draw graphs and execute search algorithms</h1>
       <div class="links">
-        <a href="https://github.com/Emanuel-Palestino/graphs-drawing-app-with-search-algorithm" target="_blank">
+        <a href="https://github.com/Emanuel-Palestino/graphs-drawing-app-with-search-algorithm" target="_blank" title="Repository">
           <i class="fa-brands fa-github"></i>
         </a>
       </div>
@@ -33,12 +33,12 @@
         <span class="section-title">Graph</span>
         <ul>
           <li>
-            <button id="btn-new_graph">
+            <button id="btn-new_graph" title="Create new graph">
               <i class="fa-solid fa-circle-plus"></i>
             </button>
           </li>
           <li>
-            <button id="btn-clear_graph" disabled>
+            <button id="btn-clear_graph" title="Clear canvas" disabled>
               <i class="fa-solid fa-trash fa-sm"></i>
             </button>
           </li>
@@ -50,17 +50,17 @@
         <span class="section-title">Drawing</span>
         <ul>
           <li>
-            <button id="btn-draw_node" disabled>
+            <button id="btn-draw_node" title="Draw node" disabled>
               <i class="fa-regular fa-circle"></i>
             </button>
           </li>
           <li>
-            <button id="btn-draw_edge" disabled>
+            <button id="btn-draw_edge" title="Draw edge" disabled>
               <i class="fa-solid fa-slash fa-sm"></i>
             </button>
           </li>
           <li>
-            <button id="btn-delete_element" disabled>
+            <button id="btn-delete_element" title="Delete element" disabled>
               <i class="fa-regular fa-circle-xmark"></i>
             </button>
           </li>
@@ -72,33 +72,33 @@
         <span class="section-title">Algorithm Execution</span>
         <ul>
           <li>
-            <select id="algorithm_execution" disabled>
+            <select id="algorithm_execution" title="Select search algorithm" disabled>
               <option value="bfs">BFS</option>
               <option value="dfs">DFS</option>
             </select>
           </li>
           <li>
-            <button id="btn-play_execution" disabled>
+            <button id="btn-play_execution" title="Play execution" disabled>
               <i class="fa-solid fa-play"></i>
             </button>
           </li>
           <li>
-            <button id="btn-pause_execution" disabled>
+            <button id="btn-pause_execution" title="Pause execution" disabled>
               <i class="fa-solid fa-pause"></i>
             </button>
           </li>
           <li>
-            <button id="btn-stop_execution" disabled>
+            <button id="btn-stop_execution" title="Stop execution" disabled>
               <i class="fa-solid fa-stop"></i>
             </button>
           </li>
           <li>
-            <button id="btn-clean_execution" disabled>
+            <button id="btn-clean_execution" title="Clean execution" disabled>
               <i class="fa-solid fa-eraser"></i>
             </button>
           </li>
           <li>
-            <button id="btn-show_results" disabled>
+            <button id="btn-show_results" title="Show/Hide result" disabled>
               <i class="fa-solid fa-table"></i>
             </button>
           </li>
