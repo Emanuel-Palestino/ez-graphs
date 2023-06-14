@@ -384,4 +384,10 @@ export class Editor {
 	public isResultPresent(): boolean {
 		return this.resultPresent
 	}
+
+	public cleanExecution(): void {
+		this.resetExecution()
+		this.executionPaused = false
+		this.resultPresent = false
+	}
 }

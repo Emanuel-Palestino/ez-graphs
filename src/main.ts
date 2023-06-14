@@ -13,6 +13,7 @@ const algorithmSelect = document.querySelector<HTMLSelectElement>('#algorithm_ex
 
 
 // GRAPH BUTTONS
+
 const btnNewGraph = document.querySelector<HTMLButtonElement>('#btn-new_graph')!
 btnNewGraph.addEventListener('click', async () => {
 	const e = await newGraphModal.showAsync()
@@ -42,7 +43,6 @@ btnCleanGraph.addEventListener('click', () => {
 
 // DRAWING BUTTONS
 
-// Draw node button
 const btnDrawNode = document.querySelector<HTMLButtonElement>('#btn-draw_node')!
 btnDrawNode.addEventListener('click', () => {
 	editor.switchDrawingNode()
@@ -50,7 +50,6 @@ btnDrawNode.addEventListener('click', () => {
 	activateButton(btnDrawNode)
 })
 
-// Draw edge button
 const btnDrawEdge = document.querySelector<HTMLButtonElement>('#btn-draw_edge')!
 btnDrawEdge.addEventListener('click', () => {
 	editor.switchDrawingEdge()
@@ -58,7 +57,6 @@ btnDrawEdge.addEventListener('click', () => {
 	activateButton(btnDrawEdge)
 })
 
-// Delete element button
 const btnDeleteElement = document.querySelector<HTMLButtonElement>('#btn-delete_element')!
 btnDeleteElement.addEventListener('click', () => {
 	editor.switchDeletingElement()
@@ -69,7 +67,6 @@ btnDeleteElement.addEventListener('click', () => {
 
 // EXECUTION BUTTONS
 
-// Play button
 const btnPlay = document.querySelector<HTMLButtonElement>('#btn-play_execution')!
 btnPlay.addEventListener('click', async () => {
 	activateButton(btnPlay)
@@ -80,12 +77,12 @@ btnPlay.addEventListener('click', async () => {
 	}
 
 	algorithmSelect.disabled = true
+	editor.disableDrawing()
 	disableGraphButtons()
 	disableDrawingButtons()
-	enableControlExecutionButtons()
-	btnResults.disabled = true
+	disableResultButtons()
 
-	editor.disableDrawing()
+	enableControlExecutionButtons()
 
 	// Algorithm execution
 	editor.resetExecution()
@@ -107,20 +104,17 @@ btnPlay.addEventListener('click', async () => {
 	enablePlayExecutionButtons()
 
 	if (executionFinished) {
-		// Trigger results button click
-		btnResults.disabled = false
-		btnResults.click()
+		enableResultButtons()
+		openResults()
 	}
 })
 
-// Pause button
 const btnPause = document.querySelector<HTMLButtonElement>('#btn-pause_execution')!
 btnPause.addEventListener('click', () => {
 	activateButton(btnPause)
 	editor.pauseExecution()
 })
 
-// Stop button
 const btnStop = document.querySelector<HTMLButtonElement>('#btn-stop_execution')!
 btnStop.addEventListener('click', () => {
 	editor.stopExecution()
@@ -132,35 +126,39 @@ btnStop.addEventListener('click', () => {
 	enableDrawingButtons()
 })
 
-// Clean button
 const btnClean = document.querySelector<HTMLButtonElement>('#btn-clean_execution')!
 btnClean.addEventListener('click', () => {
-	console.log('clean')
+	editor.cleanExecution()
+	closeResults()
+	disableResultButtons()
 })
 
 const btnResults = document.querySelector<HTMLButtonElement>('#btn-show_results')!
+const openResults = (): void => {
+	activateButton(btnResults)
+	editor.disableDrawing()
+	disableDrawingButtons()
+	disablePlayExecutionButtons()
+	document.getElementById('editor_body')!.classList.add('showing-results')
+}
+
+const closeResults = (): void => {
+	deactivateAllButtons()
+	enableDrawingButtons()
+	enablePlayExecutionButtons()
+	document.getElementById('editor_body')!.classList.remove('showing-results')
+}
+
 btnResults.addEventListener('click', () => {
-	const isActive = btnResults.classList.contains('active')
-	if (isActive) {
-		deactivateAllButtons()
-		enableDrawingButtons()
-		enablePlayExecutionButtons()
-
-		if (!editor.isResultPresent())
-			btnResults.disabled = true
-	} else {
-		activateButton(btnResults)
-		editor.disableDrawing()
-		disableDrawingButtons()
-		disablePlayExecutionButtons()
-	}
-
-	document.getElementById('editor_body')!.classList.toggle('showing-results')
+	if (btnResults.classList.contains('active')) {
+		closeResults()
+	} else
+		openResults()
 })
 
 
 
-// Functions
+// FUNCTIONS
 const disableDrawingButtons = disableButtons(btnDrawNode, btnDrawEdge, btnDeleteElement)
 const enableDrawingButtons = enableButtons(btnDrawNode, btnDrawEdge, btnDeleteElement)
 
@@ -172,3 +170,6 @@ const enablePlayExecutionButtons = enableButtons(algorithmSelect, btnPlay)
 
 const disableControlExecutionButtons = disableButtons(btnPause, btnStop)
 const enableControlExecutionButtons = enableButtons(btnPause, btnStop)
+
+const disableResultButtons = disableButtons(btnClean, btnResults)
+const enableResultButtons = enableButtons(btnClean, btnResults)
