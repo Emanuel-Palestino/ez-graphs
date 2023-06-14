@@ -34,9 +34,12 @@ btnNewGraph.addEventListener('click', async () => {
 	form.querySelector<HTMLInputElement>('#autoname')!.checked = true
 })
 
-const btnCleanGraph = document.querySelector<HTMLButtonElement>('#btn-clean_graph')!
-btnCleanGraph.addEventListener('click', () => {
-	editor.cleanGraph()
+const btnClearGraph = document.querySelector<HTMLButtonElement>('#btn-clear_graph')!
+btnClearGraph.addEventListener('click', () => {
+	editor.clearGraph()
+	editor.cleanExecution()
+	closeResult()
+	disableResultButtons()
 	deactivateAllButtons()
 })
 
@@ -105,7 +108,7 @@ btnPlay.addEventListener('click', async () => {
 
 	if (executionFinished) {
 		enableResultButtons()
-		openResults()
+		openResult()
 	}
 })
 
@@ -129,12 +132,12 @@ btnStop.addEventListener('click', () => {
 const btnClean = document.querySelector<HTMLButtonElement>('#btn-clean_execution')!
 btnClean.addEventListener('click', () => {
 	editor.cleanExecution()
-	closeResults()
+	closeResult()
 	disableResultButtons()
 })
 
 const btnResults = document.querySelector<HTMLButtonElement>('#btn-show_results')!
-const openResults = (): void => {
+const openResult = (): void => {
 	activateButton(btnResults)
 	editor.disableDrawing()
 	disableDrawingButtons()
@@ -142,7 +145,7 @@ const openResults = (): void => {
 	document.getElementById('editor_body')!.classList.add('showing-results')
 }
 
-const closeResults = (): void => {
+const closeResult = (): void => {
 	deactivateAllButtons()
 	enableDrawingButtons()
 	enablePlayExecutionButtons()
@@ -151,9 +154,9 @@ const closeResults = (): void => {
 
 btnResults.addEventListener('click', () => {
 	if (btnResults.classList.contains('active')) {
-		closeResults()
+		closeResult()
 	} else
-		openResults()
+		openResult()
 })
 
 
@@ -162,8 +165,8 @@ btnResults.addEventListener('click', () => {
 const disableDrawingButtons = disableButtons(btnDrawNode, btnDrawEdge, btnDeleteElement)
 const enableDrawingButtons = enableButtons(btnDrawNode, btnDrawEdge, btnDeleteElement)
 
-const disableGraphButtons = disableButtons(btnNewGraph, btnCleanGraph)
-const enableGraphButtons = enableButtons(btnNewGraph, btnCleanGraph)
+const disableGraphButtons = disableButtons(btnNewGraph, btnClearGraph)
+const enableGraphButtons = enableButtons(btnNewGraph, btnClearGraph)
 
 const disablePlayExecutionButtons = disableButtons(algorithmSelect, btnPlay)
 const enablePlayExecutionButtons = enableButtons(algorithmSelect, btnPlay)

@@ -298,7 +298,7 @@ export class Editor {
 		}
 	}
 
-	public cleanGraph(): void {
+	public clearGraph(): void {
 		// Remove all the nodes and edges
 		this.canvas.getElementById('edges')!.innerHTML = ''
 		this.canvas.getElementById('nodes')!.innerHTML = ''
