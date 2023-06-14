@@ -30,7 +30,7 @@ export class Editor {
 
 	// Flags
 	private executionPaused: boolean
-	private pausedObservable: Subject<boolean>
+	private pausedObservable: Subject<boolean> | null
 
 	constructor(canvas: SVGSVGElement) {
 		this.canvas = canvas
@@ -336,29 +336,43 @@ export class Editor {
 
 	public pauseExecution(): void {
 		this.executionPaused = true
-		this.pausedObservable.next(true)
+		this.pausedObservable!.next(true)
 	}
 
 	public resumeExecution(): void {
 		this.executionPaused = false
-		this.pausedObservable.next(false)
+		this.pausedObservable!.next(false)
+	}
+
+	public stopExecution(): void {
+		this.resetExecution()
+		this.pausedObservable!.complete()
+		this.executionPaused = false
 	}
 
 	public getObservable(): Subject<boolean> {
-		return this.pausedObservable
+		return this.pausedObservable!
 	}
 
-	public async executeAlgorithm(algorithm: Algorithm): Promise<void> {
-		switch (algorithm) {
-			case Algorithm.BFS:
-				const BFSResult = await BFS('node_1', this.nodes, this.adyacencyList)
-				showBFSResult(BFSResult)
-				break
+	public async executeAlgorithm(algorithm: Algorithm): Promise<boolean> {
+		this.pausedObservable = new Subject<boolean>()
+		console.log('iniciar ejecución')
+		try {
+			switch (algorithm) {
+				case Algorithm.BFS:
+					const BFSResult = await BFS('node_1', this.nodes, this.adyacencyList)
+					showBFSResult(BFSResult)
+					break
 
-			case Algorithm.DFS:
-				const DFSResult = await DFS('node_1', this.nodes, this.adyacencyList)
-				showDFSResult(DFSResult)
-				break
+				case Algorithm.DFS:
+					const DFSResult = await DFS('node_1', this.nodes, this.adyacencyList)
+					showDFSResult(DFSResult)
+					break
+			}
+			return true
+		} finally {
+			console.log('seguir')
+			return false
 		}
 	}
 }

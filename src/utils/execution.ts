@@ -4,18 +4,24 @@ import { BFSExecutionResult, DFSExecutionResult } from '../models/interfaces'
 
 // FUNCTIONS
 export const sleep = (ms: number): Promise<void> => {
-	return new Promise(resolve => setTimeout(() => {
-		if (!editor.isExecutionPaused())
-			return resolve()
-
+	return new Promise((resolve, reject) => setTimeout(() => {
 		const subscription = editor.getObservable().subscribe({
 			next: paused => {
 				if (!paused) {
 					subscription.unsubscribe()
 					resolve()
 				}
+			},
+			complete: () => {
+				console.log('Execution Finalized')
+				reject()
 			}
 		})
+
+		if (!editor.isExecutionPaused()) {
+			subscription.unsubscribe()
+			return resolve()
+		}
 	}, ms))
 }
 

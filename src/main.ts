@@ -85,9 +85,9 @@ btnPlay.addEventListener('click', async () => {
 	enableControlExecutionButtons()
 
 	editor.disableDrawing()
-	editor.resetExecution()
 
 	// Algorithm execution
+	editor.resetExecution()
 	let algorithmSelected: Algorithm = Algorithm.BFS
 	switch (algorithmSelect.value) {
 		case 'bfs':
@@ -97,7 +97,10 @@ btnPlay.addEventListener('click', async () => {
 			algorithmSelected = Algorithm.DFS
 			break
 	}
-	await editor.executeAlgorithm(algorithmSelected)
+	if (await editor.executeAlgorithm(algorithmSelected)) {
+		// Trigger results button click
+		btnResults.click()
+	}
 
 	// Algorithm execution finished
 	disableControlExecutionButtons()
@@ -105,9 +108,6 @@ btnPlay.addEventListener('click', async () => {
 	enableDrawingButtons()
 	enablePlayExecutionButtons()
 	btnResults.disabled = false
-
-	// Trigger results button click
-	btnResults.click()
 })
 
 // Pause button
@@ -120,6 +120,8 @@ btnPause.addEventListener('click', () => {
 // Stop button
 const btnStop = document.querySelector<HTMLButtonElement>('#btn-stop_execution')!
 btnStop.addEventListener('click', () => {
+	editor.stopExecution()
+
 	deactivateAllButtons()
 	disableControlExecutionButtons()
 	enablePlayExecutionButtons()
