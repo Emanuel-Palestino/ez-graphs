@@ -83,6 +83,7 @@ btnPlay.addEventListener('click', async () => {
 	disableGraphButtons()
 	disableDrawingButtons()
 	enableControlExecutionButtons()
+	btnResults.disabled = true
 
 	editor.disableDrawing()
 
@@ -97,17 +98,19 @@ btnPlay.addEventListener('click', async () => {
 			algorithmSelected = Algorithm.DFS
 			break
 	}
-	if (await editor.executeAlgorithm(algorithmSelected)) {
-		// Trigger results button click
-		btnResults.click()
-	}
+	const executionFinished = await editor.executeAlgorithm(algorithmSelected)
 
-	// Algorithm execution finished
+	// Algorithm execution finished or stopped
 	disableControlExecutionButtons()
 	enableGraphButtons()
 	enableDrawingButtons()
 	enablePlayExecutionButtons()
-	btnResults.disabled = false
+
+	if (executionFinished) {
+		// Trigger results button click
+		btnResults.disabled = false
+		btnResults.click()
+	}
 })
 
 // Pause button
@@ -137,10 +140,14 @@ btnClean.addEventListener('click', () => {
 
 const btnResults = document.querySelector<HTMLButtonElement>('#btn-show_results')!
 btnResults.addEventListener('click', () => {
-	if (btnResults.classList.contains('active')) {
+	const isActive = btnResults.classList.contains('active')
+	if (isActive) {
 		deactivateAllButtons()
 		enableDrawingButtons()
 		enablePlayExecutionButtons()
+
+		if (!editor.isResultPresent())
+			btnResults.disabled = true
 	} else {
 		activateButton(btnResults)
 		editor.disableDrawing()

@@ -29,6 +29,7 @@ export class Editor {
 	private edgeWeightModal: Modal | null
 
 	// Flags
+	private resultPresent: boolean
 	private executionPaused: boolean
 	private pausedObservable: Subject<boolean> | null
 
@@ -53,6 +54,7 @@ export class Editor {
 		this.nameNodeModal = null
 		this.edgeWeightModal = null
 
+		this.resultPresent = false
 		this.executionPaused = false
 		this.pausedObservable = new Subject<boolean>()
 	}
@@ -348,6 +350,7 @@ export class Editor {
 		this.resetExecution()
 		this.pausedObservable!.complete()
 		this.executionPaused = false
+		this.resultPresent = false
 	}
 
 	public getObservable(): Subject<boolean> {
@@ -356,7 +359,7 @@ export class Editor {
 
 	public async executeAlgorithm(algorithm: Algorithm): Promise<boolean> {
 		this.pausedObservable = new Subject<boolean>()
-		console.log('iniciar ejecución')
+		this.resultPresent = false
 		try {
 			switch (algorithm) {
 				case Algorithm.BFS:
@@ -369,10 +372,16 @@ export class Editor {
 					showDFSResult(DFSResult)
 					break
 			}
+
+			this.pausedObservable.complete()
+			this.resultPresent = true
 			return true
-		} finally {
-			console.log('seguir')
+		} catch {
 			return false
 		}
+	}
+
+	public isResultPresent(): boolean {
+		return this.resultPresent
 	}
 }

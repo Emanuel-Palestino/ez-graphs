@@ -13,7 +13,6 @@ export const sleep = (ms: number): Promise<void> => {
 				}
 			},
 			complete: () => {
-				console.log('Execution Finalized')
 				reject()
 			}
 		})
